@@ -11,24 +11,24 @@ from animation import (
 import time
 from draw import draw_routine
 from config import (
-    grid_size,
+    GRID_SIZE,
     angle,
-    animation_frame_time,
-    interval_between_fall_time,
-    interval_between_fall_throuth_time,
+    FRAMERATE,
+    INTERVAL_FALLING,
+    INTERVAL_THROUTH_CANVAS,
+    BALL_LENGTH,
 )
 
-# ボールの数
-ball_length = 60
 
-interval_frequency = interval_between_fall_time / animation_frame_time
-interval_canvas_frequency = interval_between_fall_throuth_time / animation_frame_time
+interval_frequency = INTERVAL_FALLING / FRAMERATE
+interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
 
-canvas_frequency_temp = interval_frequency * ball_length + grid_size
+canvas_frequency_temp = interval_frequency * BALL_LENGTH + GRID_SIZE
 
 
+# フレーム単位で無限ループの処理を実行
 def frame_routine_task_process(stdscr):
-    global canvas_frequency_temp, interval_frequency, ball_length, interval_canvas_frequency
+    global canvas_frequency_temp, interval_frequency, interval_canvas_frequency
     # フレームを数えるだけ
     frame_count = 0
 
@@ -40,10 +40,10 @@ def frame_routine_task_process(stdscr):
         animation_routine()
         frame_count = frame_count + 1
         draw_routine(stdscr, frame_count, ball_count, angle[0], curses)
-        time.sleep(animation_frame_time)
+        time.sleep(FRAMERATE)
 
         # 初期のボールを落とす
-        if frame_count % interval_frequency == 0 and ball_count < ball_length:
+        if frame_count % interval_frequency == 0 and ball_count < BALL_LENGTH:
             fall_ball(0)
             ball_count += 1
 
@@ -79,17 +79,14 @@ def main(stdscr):
         1, curses.COLOR_RED, curses.COLOR_BLACK
     )  # カウンターの数字を赤色に設定
 
-    # 入力スレッドを開始
     input_thread_obj = threading.Thread(
         target=input_thread, args=(stop_event, stdscr), daemon=True
     )
+    # 入力スレッドを開始
     input_thread_obj.start()
 
     # メイン処理を実行
     frame_routine_task_process(stdscr)
-
-    # 入力スレッドが終了するのを待機
-    input_thread_obj.join()
 
 
 if __name__ == "__main__":

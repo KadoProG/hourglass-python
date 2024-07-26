@@ -1,6 +1,6 @@
 import math
 from typing import Optional
-from config import grid_size, angle
+from config import GRID_SIZE, angle
 
 is_positive_sine = True
 is_positive_cosine = True
@@ -23,7 +23,7 @@ def animation_routine():
             is_bottom_left_empty = True
 
             # x軸に対して、はみ出し確認と位置調整
-            if is_positive_sine and x == grid_size:
+            if is_positive_sine and x == GRID_SIZE:
                 x -= 1
                 is_right_end = True
             elif not is_positive_sine and x == -1:
@@ -31,7 +31,7 @@ def animation_routine():
                 is_right_end = True
 
             # y軸に対して、はみ出し確認と位置調整
-            if is_positive_cosine and y == grid_size:
+            if is_positive_cosine and y == GRID_SIZE:
                 y -= 1
                 is_bottom_end = True
             elif (not is_positive_cosine) and y == -1:
@@ -72,8 +72,8 @@ def animation_routine():
 # type: None以外の場合、指定したキャンバスにボールを落とす
 def fall_ball(canvas_index: int):
     global is_positive_sine, is_positive_cosine, balls
-    x = 0 if is_positive_sine else grid_size - 1
-    y = 0 if is_positive_cosine else grid_size - 1
+    x = 0 if is_positive_sine else GRID_SIZE - 1
+    y = 0 if is_positive_cosine else GRID_SIZE - 1
 
     balls[canvas_index].append({"x": x, "y": y})
 
@@ -81,8 +81,8 @@ def fall_ball(canvas_index: int):
 def remove_ball(canvas_index: Optional[int] = None):
     global is_positive_sine, is_positive_cosine, balls
 
-    x = grid_size - 1 if is_positive_sine else 0
-    y = grid_size - 1 if is_positive_cosine else 0
+    x = GRID_SIZE - 1 if is_positive_sine else 0
+    y = GRID_SIZE - 1 if is_positive_cosine else 0
 
     if canvas_index is None:
         for i in range(len(balls)):
