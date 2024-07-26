@@ -13,7 +13,7 @@ INTERVAL_FALLING = 100 / 1000
 INTERVAL_THROUTH_CANVAS = 1000 / 1000
 """玉がキャンバスを通過して落下する間隔"""
 
-BALL_LENGTH = 60
+BALL_LENGTH = 3
 """セットする玉の数"""
 
 INIT_ANGLE = 45
@@ -26,3 +26,5 @@ INIT_ANGLE = 45
 angle = [INIT_ANGLE]
 
 balls = [[], []]
+
+is_finish_falling = [False]

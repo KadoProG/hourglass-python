@@ -1,5 +1,5 @@
 import math
-from config import GRID_SIZE, FRAMERATE, INIT_ANGLE, balls
+from config import GRID_SIZE, FRAMERATE, INIT_ANGLE, balls, is_finish_falling
 
 _grid = [["◯" for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 _logs = []
@@ -68,6 +68,10 @@ def draw_routine(stdscr, frame_count: int, ball_count: int, angle: int, curses):
         (GRID_SIZE * 4 + 2 if is_positive_sine else 0),
         "☆",
     )
+
+    # アラームを表示
+    if is_finish_falling[0]:
+        stdscr.addstr(1, GRID_SIZE * 4 + 4, "Alerm!")
 
     stdscr.addstr(GRID_SIZE * 2 + 3, 0, "[")
     stdscr.addstr("a", curses.color_pair(1))

@@ -1,6 +1,6 @@
 import math
 from typing import Optional
-from config import GRID_SIZE, angle, balls
+from config import GRID_SIZE, angle, balls, is_finish_falling
 
 is_positive_sine = True
 is_positive_cosine = True
@@ -111,6 +111,7 @@ def find_index(lst, predicate):
 
 def update_angle():
     global is_positive_sine, is_positive_cosine
+    is_finish_falling[0] = False
     angle[0] += 90
     if angle[0] > 180:
         angle[0] -= 360
@@ -124,7 +125,14 @@ def update_angle():
 def fall_ball_throuth_canavs():
     global is_positive_sine, is_positive_cosine
     if math.tan((angle[0] * math.pi) / 180) <= 0:
+        is_finish_falling[0] = False
         return
     result = remove_ball(0 if is_positive_sine else 1)
     if result:
         fall_ball(1 if is_positive_sine else 0)
+
+    # 砂が落下し終えた場合の処理
+    if len(balls[0 if is_positive_sine else 1]) == 0:
+        is_finish_falling[0] = True
+    else:
+        is_finish_falling[0] = False
