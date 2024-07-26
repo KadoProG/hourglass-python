@@ -2,9 +2,14 @@ import signal
 import os
 import curses
 import threading
-from animation import animation_routine, fall_ball, remove_ball
+from animation import (
+    animation_routine,
+    fall_ball,
+    update_angle,
+    fall_ball_throuth_canavs,
+)
 import time
-from draw import draw_routine, print_log
+from draw import draw_routine
 from config import (
     grid_size,
     angle,
@@ -23,6 +28,7 @@ canvas_frequency_temp = interval_frequency * ball_length + grid_size
 
 
 def frame_routine_task_process(stdscr):
+    global canvas_frequency_temp, interval_frequency, ball_length, interval_canvas_frequency
     # フレームを数えるだけ
     frame_count = 0
 
@@ -31,31 +37,30 @@ def frame_routine_task_process(stdscr):
 
     draw_routine(stdscr, frame_count, ball_count, angle[0], curses)
     while True:
-        animation_routine(0)
-        animation_routine(1)
+        animation_routine()
         frame_count = frame_count + 1
         draw_routine(stdscr, frame_count, ball_count, angle[0], curses)
         time.sleep(animation_frame_time)
+
+        # 初期のボールを落とす
         if frame_count % interval_frequency == 0 and ball_count < ball_length:
-            fall_ball()
+            fall_ball(0)
             ball_count += 1
+
+        # キャンバスを通過してボールを落とす
         if (
             canvas_frequency_temp < frame_count
             and frame_count % interval_canvas_frequency == 0
         ):
-            result = remove_ball()
-            if result:
-                fall_ball(1)
+            fall_ball_throuth_canavs()
 
 
 # キー入力を処理する関数
-def input_thread(stop_event, stdscr, print_log):
+def input_thread(stop_event, stdscr):
     while not stop_event.is_set():
         key = stdscr.getch()
         if key == ord("a"):
-            angle[0] += 90
-            if angle[0] > 180:
-                angle[0] -= 360
+            update_angle()
         if key == ord("q"):
             os.kill(os.getpid(), signal.SIGINT)
 
@@ -76,7 +81,7 @@ def main(stdscr):
 
     # 入力スレッドを開始
     input_thread_obj = threading.Thread(
-        target=input_thread, args=(stop_event, stdscr, print_log), daemon=True
+        target=input_thread, args=(stop_event, stdscr), daemon=True
     )
     input_thread_obj.start()
 
