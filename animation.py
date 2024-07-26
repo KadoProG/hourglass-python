@@ -7,6 +7,7 @@ is_positive_cosine = True
 
 
 def animation_routine():
+    """ボールの１フレームごとの動きを変数内で描写する関数"""
     global is_positive_sine, is_positive_cosine
     for canvas_index in range(len(balls)):
         for index, ball in enumerate(balls[canvas_index]):
@@ -66,9 +67,12 @@ def animation_routine():
             ball["y"] = y
 
 
-# ボールを落とす
-# type: None以外の場合、指定したキャンバスにボールを落とす
 def fall_ball(canvas_index: int):
+    """
+    ボールを落とす関数
+
+    canvas_indexによってどちらのキャンバスに落とすかを指定
+    """
     global is_positive_sine, is_positive_cosine
     x = 0 if is_positive_sine else GRID_SIZE - 1
     y = 0 if is_positive_cosine else GRID_SIZE - 1
@@ -77,6 +81,12 @@ def fall_ball(canvas_index: int):
 
 
 def remove_ball(canvas_index: Optional[int] = None):
+    """
+    ボールを削除する関数\n
+    `canvas_index`によってどちらのキャンバスのボールを削除するかを指定\n
+    `canvas_index`が`None`の場合、どちらかのボールを削除する\n
+    削除が成功したかを`boolean`を返す
+    """
     global is_positive_sine, is_positive_cosine
 
     x = GRID_SIZE - 1 if is_positive_sine else 0
@@ -110,6 +120,11 @@ def find_index(lst, predicate):
 
 
 def update_angle():
+    """
+    角度を更新する関数\n
+    45→135→-135→-45→45の順に更新する\n
+    角度を更新するとともに、`is_positive_sine`と`is_positive_cosine`を更新する
+    """
     global is_positive_sine, is_positive_cosine
     is_finish_falling[0] = False
     angle[0] += 90
@@ -119,10 +134,12 @@ def update_angle():
     is_positive_sine = math.sin((angle[0] * math.pi) / 180) >= 0
     is_positive_cosine = math.cos((angle[0] * math.pi) / 180) >= 0
 
-    return f"{is_positive_sine}, {is_positive_cosine}"
-
-
 def fall_ball_throuth_canavs():
+    """
+    ボールをキャンバスを通して落下させる関数\n
+    上側のボールの削除と、下側のボールの落下を行い、砂の落下をシミュレートする\n
+    砂が落下し終えた場合、`is_finish_falling`を`True`にする
+    """
     global is_positive_sine, is_positive_cosine
     if math.tan((angle[0] * math.pi) / 180) <= 0:
         is_finish_falling[0] = False
