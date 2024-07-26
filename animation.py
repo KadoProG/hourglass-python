@@ -134,6 +134,7 @@ def update_angle():
     is_positive_sine = math.sin((angle[0] * math.pi) / 180) >= 0
     is_positive_cosine = math.cos((angle[0] * math.pi) / 180) >= 0
 
+
 def fall_ball_throuth_canavs():
     """
     ボールをキャンバスを通して落下させる関数\n
