@@ -4,7 +4,7 @@
 GRID_SIZE = 8
 """グリッドサイズ"""
 
-FRAMERATE = 10 / 1000
+FRAMERATE = 100 / 1000
 """玉が1マス進む時間（フレームレート）"""
 
 INTERVAL_FALLING = 100 / 1000

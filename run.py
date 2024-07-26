@@ -1,15 +1,3 @@
-import signal
-import os
-import curses
-import threading
-from animation import (
-    animation_routine,
-    fall_ball,
-    update_angle,
-    fall_ball_throuth_canavs,
-)
-import time
-from draw import draw_routine
 from config import (
     GRID_SIZE,
     angle,
@@ -18,6 +6,16 @@ from config import (
     INTERVAL_THROUTH_CANVAS,
     BALL_LENGTH,
 )
+import curses
+import threading
+from animation import (
+    animation_routine,
+    fall_ball,
+    fall_ball_throuth_canavs,
+)
+import time
+from draw import draw_routine
+from input_changes import input_thread
 
 
 interval_frequency = INTERVAL_FALLING / FRAMERATE
@@ -53,16 +51,6 @@ def frame_routine_task_process(stdscr):
             and frame_count % interval_canvas_frequency == 0
         ):
             fall_ball_throuth_canavs()
-
-
-# キー入力を処理する関数
-def input_thread(stop_event, stdscr):
-    while not stop_event.is_set():
-        key = stdscr.getch()
-        if key == ord("a"):
-            update_angle()
-        if key == ord("q"):
-            os.kill(os.getpid(), signal.SIGINT)
 
 
 def main(stdscr):
