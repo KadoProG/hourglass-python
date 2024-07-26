@@ -24,8 +24,8 @@ interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
 canvas_frequency_temp = interval_frequency * BALL_LENGTH + GRID_SIZE
 
 
-# フレーム単位で無限ループの処理を実行
 def frame_routine_task_process(stdscr):
+    """フレーム単位で無限ループの処理を実行する関数"""
     global canvas_frequency_temp, interval_frequency, interval_canvas_frequency
     # フレームを数えるだけ
     frame_count = 0
@@ -36,7 +36,7 @@ def frame_routine_task_process(stdscr):
     draw_routine(stdscr, frame_count, ball_count, angle[0], curses)
     while True:
         animation_routine()
-        frame_count = frame_count + 1
+        frame_count += 1
         draw_routine(stdscr, frame_count, ball_count, angle[0], curses)
         time.sleep(FRAMERATE)
 
