@@ -1,8 +1,22 @@
+# 1. **VCC** - 5V（ピン2または4）
+# 2. **GND** - GND（ピン6、9、14、20、25、30、34、39のいずれか）
+# 3. **DIN** - MOSI（ピン19）
+# 4. **CS** - CE0（ピン24）
+# 5. **CLK** - SCLK（ピン23）import math
+
+from luma.core.interface.serial import spi, noop
+from luma.core.render import canvas
+from luma.led_matrix.device import max7219
 import math
+
 from config import GRID_SIZE, FRAMERATE, INIT_ANGLE, balls, is_finish_falling
 
 _grid = [["◯" for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 _logs = []
+
+# 初期設定
+serial = spi(port=0, device=0, gpio=noop())
+device = max7219(serial, cascaded=2, block_orientation=90, rotate=0)
 
 # 内部で使用する変数
 pre_angle = INIT_ANGLE
@@ -46,6 +60,15 @@ def draw_routine(stdscr, frame_count: int, ball_count: int, angle: int, curses):
     for index, row in enumerate(_grid):
         row_text = ("  " * GRID_SIZE if index >= GRID_SIZE else "") + " ".join(row)
         stdscr.addstr(index + 2, 2, row_text)
+
+    with canvas(device) as draw:
+        for index, ball_items in enumerate(balls):
+            for ball in ball_items:
+                x = ball["x"]
+                y = ball["y"]
+                if index == 1:
+                    x += GRID_SIZE
+                draw.point((x, y), fill="white")  # 点灯するドットを描画
 
     # これは数字を表示するための行
     row_text = ("").join([f"{i:> 2}" for i in range(GRID_SIZE)])[1:]
