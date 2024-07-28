@@ -10,14 +10,18 @@ BUZZER_PIN = 27  # GPIO 27
 buzzer = PWM(Pin(BUZZER_PIN))
 buzzer.duty_u16(32768)  # デューティサイクルを50%に設定（16ビット精度）
 
+
 def play_sound(tone: int, duration: float):
     buzzer.freq(tone)
     sleep(duration)
+
+
 #    buzzer.duty_u16(0)  # デューティサイクルを0にして停止
 #    sleep(0.05)  # 短いポーズを追加
 
 # ここから音程を刻み込む
 buzzer.duty_u16(32768)  # デューティサイクルを50%に設定（16ビット精度）
+
 
 def play_bibideba_chorus_common():
     play_sound(430, 0.127)  # BI
@@ -39,6 +43,7 @@ def play_bibideba_chorus_common():
     play_sound(462, 0.254)  # YEAH
     play_sound(430, 0.254)  #
     play_sound(382, 0.254)  #
+
 
 def play_song():
     play_bibideba_chorus_common()  # 繰り返し部分
@@ -89,6 +94,7 @@ def play_song():
     play_sound(285, 0.127)  # で
     play_sound(320, 0.381)  # しょ
 
+
 def main():
     try:
         play_song()
@@ -97,6 +103,6 @@ def main():
     finally:
         buzzer.deinit()  # PWMを終了
 
+
 if __name__ == "__main__":
     main()
-
