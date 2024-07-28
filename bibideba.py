@@ -1,5 +1,3 @@
-# ======== ビビデバ =========== 星街すいせい ==========
-# ======== GPIOポートに接続したスピーカーを鳴らす ========
 import RPi.GPIO as GPIO
 import time
 import threading
@@ -12,7 +10,6 @@ GPIO.setup(BUZZER_PIN, GPIO.OUT, initial=GPIO.LOW)
 
 buzzer = GPIO.PWM(BUZZER_PIN, 1)
 stop_flag = threading.Event()
-pause_flag = threading.Event()
 
 
 def play_sound(tone: int, devide: float, pause: int):
@@ -26,7 +23,7 @@ def play_sound(tone: int, devide: float, pause: int):
 
 
 # ここから音程を刻み込む
-buzzer.start(50)
+buzzer.start(0)
 
 
 def play_bibideba_chorus_common():
@@ -53,6 +50,7 @@ def play_bibideba_chorus_common():
 
 
 def play_song():
+    global buzzer
     while not stop_flag.is_set():
         play_bibideba_chorus_common()  # 繰り返し部分
 
@@ -104,6 +102,7 @@ def play_song():
 
 
 def start_playing():
+    buzzer.start(50)
     stop_flag.clear()
     song_thread = threading.Thread(target=play_song)
     song_thread.start()
@@ -111,27 +110,21 @@ def start_playing():
 
 def stop_playing():
     stop_flag.set()
+    buzzer.start(0)
 
 
-def main():
+def cleanup():
+    GPIO.cleanup()
+
+
+# モジュールとして利用できるようにエクスポート
+__all__ = ["start_playing", "stop_playing", "cleanup"]
+
+# スクリプトとして実行された場合
+if __name__ == "__main__":
     try:
         start_playing()
-        while True:
-            command = (
-                input("Enter 's' to stop, 'r' to resume, 'q' to quit: ").strip().lower()
-            )
-            if command == "s":
-                stop_playing()
-            elif command == "r":
-                start_playing()
-            elif command == "q":
-                stop_playing()
-                break
     except KeyboardInterrupt:
         print("プログラムが正常に終了されました")
     finally:
-        GPIO.cleanup()
-
-
-if __name__ == "__main__":
-    main()
+        cleanup()

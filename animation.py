@@ -1,6 +1,7 @@
 import math
 from typing import Optional
 from config import GRID_SIZE, angle, balls, is_finish_falling
+import bibideba
 
 is_positive_sine = True
 is_positive_cosine = True
@@ -144,6 +145,7 @@ def fall_ball_throuth_canavs():
     global is_positive_sine, is_positive_cosine
     if math.tan((angle[0] * math.pi) / 180) <= 0:
         is_finish_falling[0] = False
+        bibideba.stop_playing()
         return
     result = remove_ball(0 if is_positive_sine else 1)
     if result:
@@ -151,6 +153,10 @@ def fall_ball_throuth_canavs():
 
     # 砂が落下し終えた場合の処理
     if len(balls[0 if is_positive_sine else 1]) == 0:
-        is_finish_falling[0] = True
+        if not is_finish_falling[0]:
+            bibideba.start_playing()
+            is_finish_falling[0] = True
     else:
-        is_finish_falling[0] = False
+        if is_finish_falling[0]:
+            is_finish_falling[0] = False
+            bibideba.stop_playing()

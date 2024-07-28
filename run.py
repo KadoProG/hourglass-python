@@ -16,6 +16,7 @@ from animation import (
 import time
 from draw import draw_routine
 from input_changes import input_thread
+import bibideba
 
 
 interval_frequency = INTERVAL_FALLING / FRAMERATE
@@ -82,4 +83,6 @@ if __name__ == "__main__":
         # cursesを使用するためのラッパー関数
         curses.wrapper(main)
     except KeyboardInterrupt:
+        bibideba.stop_playing()
+        bibideba.cleanup()
         print("プログラムが正常に終了されました")
