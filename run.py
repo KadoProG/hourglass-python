@@ -12,11 +12,13 @@ from animation import (
     animation_routine,
     fall_ball,
     fall_ball_throuth_canavs,
+    update_angle,
 )
 import time
 from draw import draw_routine
 from input_changes import input_thread
 import bibideba
+from mpu_events import get_mpu_angle
 
 
 interval_frequency = INTERVAL_FALLING / FRAMERATE
@@ -36,6 +38,10 @@ def frame_routine_task_process(stdscr):
 
     draw_routine(stdscr, frame_count, ball_count, angle[0], curses)
     while True:
+        # MPUデバイスから角度を取得
+        roll, _ = get_mpu_angle()
+        update_angle(-roll - 90)
+
         animation_routine()
         frame_count += 1
         draw_routine(stdscr, frame_count, ball_count, angle[0], curses)

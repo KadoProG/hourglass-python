@@ -13,7 +13,7 @@ INTERVAL_FALLING = 100 / 1000
 INTERVAL_THROUTH_CANVAS = 1000 / 1000
 """玉がキャンバスを通過して落下する間隔"""
 
-BALL_LENGTH = 3
+BALL_LENGTH = 20
 """セットする玉の数"""
 
 INIT_ANGLE = 45

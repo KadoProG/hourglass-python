@@ -120,20 +120,32 @@ def find_index(lst, predicate):
     return -1
 
 
-def update_angle():
+def update_angle(new_angle: Optional[int] = None):
     """
     角度を更新する関数\n
     45→135→-135→-45→45の順に更新する\n
     角度を更新するとともに、`is_positive_sine`と`is_positive_cosine`を更新する
     """
     global is_positive_sine, is_positive_cosine
-    is_finish_falling[0] = False
-    angle[0] += 90
-    if angle[0] > 180:
-        angle[0] -= 360
-    angle[0] = angle[0]
-    is_positive_sine = math.sin((angle[0] * math.pi) / 180) >= 0
-    is_positive_cosine = math.cos((angle[0] * math.pi) / 180) >= 0
+
+    if new_angle is None:
+        angle[0] += 90
+        if angle[0] > 180:
+            angle[0] -= 360
+    else:
+        angle[0] = new_angle
+
+    pre_is_positive_sine = math.sin((angle[0] * math.pi) / 180) >= 0
+    pre_is_positive_cosine = math.cos((angle[0] * math.pi) / 180) >= 0
+
+    if not (
+        pre_is_positive_cosine == is_positive_cosine
+        and pre_is_positive_sine == is_positive_sine
+    ):
+        is_finish_falling[0] = False
+        bibideba.stop_playing()
+        is_positive_sine = pre_is_positive_sine
+        is_positive_cosine = pre_is_positive_cosine
 
 
 def fall_ball_throuth_canavs():
