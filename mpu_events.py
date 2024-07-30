@@ -42,7 +42,7 @@ def read_accel_data():
 def calculate_tilt(accel_x, accel_y, accel_z):
     roll = math.atan2(accel_y, accel_z) * 180 / math.pi
     pitch = math.atan2(-accel_x, math.sqrt(accel_y**2 + accel_z**2)) * 180 / math.pi
-    return roll, pitch
+    return round(roll), round(pitch)
 
 
 def get_mpu_angle():

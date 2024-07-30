@@ -156,19 +156,16 @@ def fall_ball_throuth_canavs():
     """
     global is_positive_sine, is_positive_cosine
     if math.tan((angle[0] * math.pi) / 180) <= 0:
-        is_finish_falling[0] = False
         bibideba.stop_playing()
         return
+
+    # キャンバス通過：削除処理
     result = remove_ball(0 if is_positive_sine else 1)
     if result:
+        # キャンバス通過：挿入処理（削除に成功時）
         fall_ball(1 if is_positive_sine else 0)
-
-    # 砂が落下し終えた場合の処理
-    if len(balls[0 if is_positive_sine else 1]) == 0:
-        if not is_finish_falling[0]:
-            bibideba.start_playing()
-            is_finish_falling[0] = True
-    else:
-        if is_finish_falling[0]:
-            is_finish_falling[0] = False
-            bibideba.stop_playing()
+        is_finish_falling[0] = False
+    elif not is_finish_falling[0] and len(balls[0 if is_positive_sine else 1]) == 0:
+        # 既に全部通過済みの場合、１回だけ実行
+        bibideba.start_playing()
+        is_finish_falling[0] = True

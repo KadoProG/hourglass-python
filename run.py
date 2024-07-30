@@ -16,9 +16,9 @@ from animation import (
 )
 import time
 from draw import draw_routine
-from input_changes import input_thread
 import bibideba
 from mpu_events import get_mpu_angle
+from button import button_thread
 
 
 interval_frequency = INTERVAL_FALLING / FRAMERATE
@@ -37,10 +37,11 @@ def frame_routine_task_process(stdscr):
     ball_count = 0
 
     draw_routine(stdscr, frame_count, ball_count, angle[0], curses)
+
     while True:
         # MPUデバイスから角度を取得
         roll, _ = get_mpu_angle()
-        update_angle(-roll - 90)
+        update_angle(-roll + 45)
 
         animation_routine()
         frame_count += 1
@@ -74,11 +75,12 @@ def main(stdscr):
         1, curses.COLOR_RED, curses.COLOR_BLACK
     )  # カウンターの数字を赤色に設定
 
-    input_thread_obj = threading.Thread(
-        target=input_thread, args=(stop_event, stdscr), daemon=True
+    button_thread_obj = threading.Thread(
+        target=button_thread, args=(stop_event, bibideba), daemon=True
     )
+
     # 入力スレッドを開始
-    input_thread_obj.start()
+    button_thread_obj.start()
 
     # メイン処理を実行
     frame_routine_task_process(stdscr)
