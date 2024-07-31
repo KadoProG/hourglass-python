@@ -2,9 +2,17 @@ import math
 from typing import Optional
 from config import GRID_SIZE, angle, balls, is_finish_falling
 import bibideba
+import requests
+from dotenv import load_dotenv
+import os
 
 is_positive_sine = True
 is_positive_cosine = True
+
+
+load_dotenv()
+
+url = os.getenv("GAS_URL")
 
 
 def animation_routine():
@@ -168,4 +176,5 @@ def fall_ball_throuth_canavs():
     elif not is_finish_falling[0] and len(balls[0 if is_positive_sine else 1]) == 0:
         # 既に全部通過済みの場合、１回だけ実行
         bibideba.start_playing()
+        requests.get(url)
         is_finish_falling[0] = True
