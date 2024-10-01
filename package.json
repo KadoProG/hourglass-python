@@ -6,6 +6,7 @@
   "author": "KadoProG <splatrain@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "prettier": "black ."
+    "prettier": "black .",
+    "dev": "black . && python run.py"
   }
 }
