@@ -1,4 +1,4 @@
-from config import GRID_SIZE, FRAMERATE, INIT_ANGLE, balls, is_finish_falling, angle
+from config import GRID_SIZE, FRAMERATE, INIT_ANGLE
 import curses
 import math
 
@@ -36,7 +36,14 @@ class Draw:
             1, curses.COLOR_RED, curses.COLOR_BLACK
         )  # カウンターの数字を赤色に設定
 
-    def draw_routine(self, frame_count: int, ball_count: int) -> None:
+    def draw_frame(
+        self,
+        balls: list[list[dict[str, int]]],
+        angle: int,
+        is_finish_falling: bool,
+        frame_count: int,
+        ball_count: int,
+    ) -> None:
         self._stdscr.clear()
         # 空のグリッドを作成
         self._grid = [["◯" for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE * 2)]
@@ -45,17 +52,17 @@ class Draw:
         self._draw_grid(balls[1], 1)
 
         # --------１行目のメッセージ
-        row0_message = f"frame: {frame_count:> 5} ball: {ball_count:> 3} angle: {angle[0]:> 4}° GRID_SIZE: {GRID_SIZE:< 3}"
+        row0_message = f"frame: {frame_count:> 5} ball: {ball_count:> 3} angle: {angle:> 4}° GRID_SIZE: {GRID_SIZE:< 3}"
         self._stdscr.addstr(0, 0, row0_message)
 
         # --------２行目のメッセージ
-        if self._pre_angle != angle[0] or self._count_angle_diff_frame < 1 / FRAMERATE:
-            if self._pre_angle != angle[0]:
-                self._pre_angle = angle[0]
+        if self._pre_angle != angle or self._count_angle_diff_frame < 1 / FRAMERATE:
+            if self._pre_angle != angle:
+                self._pre_angle = angle
                 self._count_angle_diff_frame = 0
             self._stdscr.addstr(1, 4, "[")
             self._stdscr.addstr("keypress", curses.color_pair(1))
-            self._stdscr.addstr(f"] angleを{angle[0]:> 4}° に変更")
+            self._stdscr.addstr(f"] angleを{angle:> 4}° に変更")
             self._count_angle_diff_frame += 1
 
         # --------グリッドを描写
@@ -82,12 +89,12 @@ class Draw:
             )
 
         # --------アラームを表示
-        if is_finish_falling[0]:
+        if is_finish_falling:
             self._stdscr.addstr(1, GRID_SIZE * 4 + 4, "Alerm!")
 
         # --------角度に応じて星を描写
-        is_positive_sine = math.sin((angle[0] * math.pi) / 180) >= 0
-        is_positive_cosine = math.cos((angle[0] * math.pi) / 180) >= 0
+        is_positive_sine = math.sin((angle * math.pi) / 180) >= 0
+        is_positive_cosine = math.cos((angle * math.pi) / 180) >= 0
 
         self._stdscr.addstr(
             (GRID_SIZE * 2 + 2 if is_positive_cosine else 1),
