@@ -23,7 +23,7 @@ class Draw:
     _count_angle_diff_frame = 1 / FRAMERATE
     _pre_angle = INIT_ANGLE
 
-    def __init__(self, stdscr):
+    def __init__(self, stdscr: curses.window) -> None:
         self._stdscr = stdscr
         # 非エコーモードに設定
         curses.noecho()
@@ -35,7 +35,7 @@ class Draw:
             1, curses.COLOR_RED, curses.COLOR_BLACK
         )  # カウンターの数字を赤色に設定
 
-    def draw_routine(self, frame_count: int, ball_count: int):
+    def draw_routine(self, frame_count: int, ball_count: int) -> None:
         self._stdscr.clear()
         # 空のグリッドを作成
         self._grid = [["◯" for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE * 2)]
@@ -83,13 +83,13 @@ class Draw:
         if is_finish_falling[0]:
             self._stdscr.addstr(1, GRID_SIZE * 4 + 4, "Alerm!")
 
-    def _draw_grid(self, balls, index: int):
+    def _draw_grid(self, balls, index: int) -> None:
         # balls配列に基づいてドットを配置
         for ball in balls:
             x, y = ball["x"], ball["y"]
             if 0 <= x < GRID_SIZE and 0 <= y < GRID_SIZE:
                 self._grid[y + index * GRID_SIZE][x] = "●"
 
-    def print_log(self, message: str):
+    def print_log(self, message: str) -> None:
         """ログを表示する"""
         self._logs.append(message)

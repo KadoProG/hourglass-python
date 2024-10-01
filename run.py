@@ -24,7 +24,7 @@ interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
 canvas_frequency_temp = interval_frequency * BALL_LENGTH + GRID_SIZE
 
 
-def frame_routine_task_process(stdscr, draw):
+def frame_routine_task_process(draw: Draw):
     """フレーム単位で無限ループの処理を実行する関数"""
     global canvas_frequency_temp, interval_frequency, interval_canvas_frequency
     # フレームを数えるだけ
@@ -53,7 +53,7 @@ def frame_routine_task_process(stdscr, draw):
             fall_ball_throuth_canavs()
 
 
-def main(stdscr):
+def main(stdscr: curses.window):
     # 描画クラスを作成
     draw = Draw(stdscr)
 
@@ -68,7 +68,7 @@ def main(stdscr):
     input_thread_obj.start()
 
     # メイン処理を実行
-    frame_routine_task_process(stdscr, draw)
+    frame_routine_task_process(draw)
 
 
 if __name__ == "__main__":
