@@ -1,5 +1,6 @@
 from config import GRID_SIZE, FRAMERATE, INIT_ANGLE, balls, is_finish_falling, angle
 import curses
+import math
 
 
 class Draw:
@@ -43,11 +44,11 @@ class Draw:
         self._draw_grid(balls[0], 0)
         self._draw_grid(balls[1], 1)
 
-        # １行目のメッセージ
+        # --------１行目のメッセージ
         row0_message = f"frame: {frame_count:> 5} ball: {ball_count:> 3} angle: {angle[0]:> 4}° GRID_SIZE: {GRID_SIZE:< 3}"
         self._stdscr.addstr(0, 0, row0_message)
 
-        # ２行目のメッセージ
+        # --------２行目のメッセージ
         if self._pre_angle != angle[0] or self._count_angle_diff_frame < 1 / FRAMERATE:
             if self._pre_angle != angle[0]:
                 self._pre_angle = angle[0]
@@ -57,34 +58,45 @@ class Draw:
             self._stdscr.addstr(f"] angleを{angle[0]:> 4}° に変更")
             self._count_angle_diff_frame += 1
 
-        # グリッドを描写
+        # --------グリッドを描写
         for index, row in enumerate(self._grid):
             row_text = ("  " * GRID_SIZE if index >= GRID_SIZE else "") + " ".join(row)
             self._stdscr.addstr(index + 2, 2, row_text)
 
-        # これは数字を表示するための行
+        # --------これは数字を表示するための行
         row_text = ("").join([f"{i:> 2}" for i in range(GRID_SIZE)])[1:]
         self._stdscr.addstr(
             GRID_SIZE * 2 + 2, 0 + 2, f"{row_text} {row_text}", curses.color_pair(1)
         )
 
-        # これは数字を表示するための列
+        # --------これは数字を表示するための列
         for index in range(GRID_SIZE * 2):
             self._stdscr.addstr(
                 index + 2, GRID_SIZE * 4 + 1, f"{index:> 2}", curses.color_pair(1)
             )
 
+        # --------ログを表示
         for index, log in enumerate(self._logs):
             self._stdscr.addstr(
                 GRID_SIZE * 2 + 5 + index, 0, "[" + str(index + 1) + "]" + log
             )
 
-            # アラームを表示
+        # --------アラームを表示
         if is_finish_falling[0]:
             self._stdscr.addstr(1, GRID_SIZE * 4 + 4, "Alerm!")
 
+        # --------角度に応じて星を描写
+        is_positive_sine = math.sin((angle[0] * math.pi) / 180) >= 0
+        is_positive_cosine = math.cos((angle[0] * math.pi) / 180) >= 0
+
+        self._stdscr.addstr(
+            (GRID_SIZE * 2 + 2 if is_positive_cosine else 1),
+            (GRID_SIZE * 4 + 2 if is_positive_sine else 0),
+            "☆",
+        )
+
     def _draw_grid(self, balls, index: int) -> None:
-        # balls配列に基づいてドットを配置
+        """balls配列に基づいてドットを配置"""
         for ball in balls:
             x, y = ball["x"], ball["y"]
             if 0 <= x < GRID_SIZE and 0 <= y < GRID_SIZE:
