@@ -14,8 +14,8 @@ from animation import (
     fall_ball_throuth_canavs,
 )
 import time
-from draw import draw_routine
 from input_changes import input_thread
+from draw import Draw
 
 
 interval_frequency = INTERVAL_FALLING / FRAMERATE
@@ -24,7 +24,7 @@ interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
 canvas_frequency_temp = interval_frequency * BALL_LENGTH + GRID_SIZE
 
 
-def frame_routine_task_process(stdscr):
+def frame_routine_task_process(stdscr, draw):
     """フレーム単位で無限ループの処理を実行する関数"""
     global canvas_frequency_temp, interval_frequency, interval_canvas_frequency
     # フレームを数えるだけ
@@ -33,11 +33,11 @@ def frame_routine_task_process(stdscr):
     # 投げたボールをカウント
     ball_count = 0
 
-    draw_routine(stdscr, frame_count, ball_count, angle[0], curses)
+    draw.draw_routine(frame_count, ball_count)
     while True:
         animation_routine()
         frame_count += 1
-        draw_routine(stdscr, frame_count, ball_count, angle[0], curses)
+        draw.draw_routine(frame_count, ball_count)
         time.sleep(FRAMERATE)
 
         # 初期のボールを落とす
@@ -54,27 +54,21 @@ def frame_routine_task_process(stdscr):
 
 
 def main(stdscr):
-    # 非エコーモードに設定
-    curses.noecho()
-    stdscr.nodelay(True)
+    # 描画クラスを作成
+    draw = Draw(stdscr)
 
     # 停止イベントを作成
     stop_event = threading.Event()
 
-    # 色の初期化
-    curses.start_color()
-    curses.init_pair(
-        1, curses.COLOR_RED, curses.COLOR_BLACK
-    )  # カウンターの数字を赤色に設定
-
     input_thread_obj = threading.Thread(
-        target=input_thread, args=(stop_event, stdscr), daemon=True
+        target=input_thread, args=(stop_event, stdscr, draw), daemon=True
     )
+
     # 入力スレッドを開始
     input_thread_obj.start()
 
     # メイン処理を実行
-    frame_routine_task_process(stdscr)
+    frame_routine_task_process(stdscr, draw)
 
 
 if __name__ == "__main__":
