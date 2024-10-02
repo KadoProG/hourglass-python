@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "prettier": "black .",
-    "dev": "black . && python run.py"
+    "dev": "source venv/bin/activate && pip install -r requirements.txt && black . && python run.py",
+    "prepare": "source venv/bin/activate && pip install -r requirements.txt"
   }
 }

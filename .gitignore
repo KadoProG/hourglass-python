@@ -118,3 +118,6 @@ ipython_config.py
 *.swp
 *.swo
 *.swn
+
+# Node
+node_modules/
