@@ -10,9 +10,10 @@ class SandAnimation:
     _is_positive_cosine = True
     _is_finish_falling = False
 
-    def __init__(self, draw, sound) -> None:
+    def __init__(self, draw, sound, is_fixed: bool = False) -> None:
         self.draw = draw
         self._sound = sound
+        self._is_fixed = is_fixed
 
     def next_frame(self) -> tuple[list[list[dict[str, int]]], int, bool]:
         """次のフレームを計算する"""
@@ -156,3 +157,11 @@ class SandAnimation:
             if predicate(x):
                 return i
         return -1
+    
+    def move_ball_to_top(self):
+        """現在のボールを全て上に移動する"""
+        if self._is_fixed:
+            ball_length = len(self._balls[1])
+            self._balls[1] = []
+            for _ in range(ball_length):
+                self._fall_dot(0)
