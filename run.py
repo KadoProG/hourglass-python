@@ -13,6 +13,7 @@ from input_changes import input_thread
 from draw import Draw
 from sand_animation import SandAnimation
 from sound import Sound
+import argparse
 
 
 def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation, sound: Sound):
@@ -49,10 +50,16 @@ def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation, sound: 
 
 
 def main(stdscr: curses.window):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--fix", help="optional", action="store_true")
+    args = parser.parse_args()
+
+    is_fixed = args.fix
+
     # 描画クラスを作成
     draw = Draw(stdscr)
     sound = Sound(stdscr)
-    sandAnimation = SandAnimation(draw, sound)
+    sandAnimation = SandAnimation(draw, sound, is_fixed)
 
     # 停止イベントを作成
     stop_event = threading.Event()

@@ -157,7 +157,7 @@ class SandAnimation:
             if predicate(x):
                 return i
         return -1
-    
+
     def move_ball_to_top(self):
         """現在のボールを全て上に移動する"""
         if self._is_fixed:
