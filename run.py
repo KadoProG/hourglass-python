@@ -14,15 +14,12 @@ from draw import Draw
 from sand_animation import SandAnimation
 
 
-interval_frequency = INTERVAL_FALLING / FRAMERATE
-interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
-
-canvas_frequency_temp = interval_frequency * BALL_LENGTH + GRID_SIZE
-
-
 def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation):
     """フレーム単位で無限ループの処理を実行する関数"""
-    global canvas_frequency_temp, interval_frequency, interval_canvas_frequency
+    interval_frequency = INTERVAL_FALLING / FRAMERATE
+    interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
+    canvas_frequency_temp = interval_frequency * BALL_LENGTH + GRID_SIZE
+    
     # フレームを数えるだけ
     frame_count = 0
 
