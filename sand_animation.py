@@ -10,8 +10,9 @@ class SandAnimation:
     _is_positive_cosine = True
     _is_finish_falling = False
 
-    def __init__(self, draw) -> None:
+    def __init__(self, draw, sound) -> None:
         self.draw = draw
+        self._sound = sound
 
     def next_frame(self) -> tuple[list[list[dict[str, int]]], int, bool]:
         """次のフレームを計算する"""
@@ -121,23 +122,34 @@ class SandAnimation:
         self._angle += 90
         if self._angle > 180:
             self._angle -= 360
+        self._is_finish_falling = False
+        self._sound.stop()
         self._is_positive_sine = math.sin((self._angle * math.pi) / 180) >= 0
         self._is_positive_cosine = math.cos((self._angle * math.pi) / 180) >= 0
 
     def fall_dot_through_canvas(self) -> None:
         """キャンバスを通過してドットを落とす"""
         if math.tan((self._angle * math.pi) / 180) <= 0:
+            self._sound.stop()
+            return
+        if math.tan((self._angle * math.pi) / 180) <= 0:
             self._is_finish_falling = False
             return
-        result = self.remove_dot(0 if self._is_positive_sine else 1)
-        if result:
-            self.fall_dot(1 if self._is_positive_sine else 0)
 
-        # 砂が落下し終えた場合の処理
-        if len(self._balls[0 if self._is_positive_sine else 1]) == 0:
-            self._is_finish_falling = True
-        else:
+        # キャンバス通過：削除処理
+        result = self.remove_dot(0 if self._is_positive_sine else 1)
+
+        if result:
+            # キャンバス通過：挿入処理（削除に成功時）
+            self.fall_dot(1 if self._is_positive_sine else 0)
             self._is_finish_falling = False
+        elif (
+            not self._is_finish_falling
+            and len(self._balls[0 if self._is_positive_sine else 1]) == 0
+        ):
+            # 既に全部通過済みの場合、１回だけ実行
+            self._sound.play()
+            self._is_finish_falling = True
 
     def _find_index(self, lst, predicate) -> int:
         for i, x in enumerate(lst):

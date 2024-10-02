@@ -12,14 +12,15 @@ import time
 from input_changes import input_thread
 from draw import Draw
 from sand_animation import SandAnimation
+from sound import Sound
 
 
-def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation):
+def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation, sound: Sound):
     """フレーム単位で無限ループの処理を実行する関数"""
     interval_frequency = INTERVAL_FALLING / FRAMERATE
     interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
     canvas_frequency_temp = interval_frequency * BALL_LENGTH + GRID_SIZE
-    
+
     # フレームを数えるだけ
     frame_count = 0
 
@@ -50,7 +51,8 @@ def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation):
 def main(stdscr: curses.window):
     # 描画クラスを作成
     draw = Draw(stdscr)
-    sandAnimation = SandAnimation(draw)
+    sound = Sound(stdscr)
+    sandAnimation = SandAnimation(draw, sound)
 
     # 停止イベントを作成
     stop_event = threading.Event()
@@ -63,7 +65,7 @@ def main(stdscr: curses.window):
     input_thread_obj.start()
 
     # メイン処理を実行
-    frame_routine_task_process(draw, sandAnimation)
+    frame_routine_task_process(draw, sandAnimation, sound)
 
 
 if __name__ == "__main__":
