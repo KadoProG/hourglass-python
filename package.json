@@ -1,8 +1,7 @@
 {
   "name": "hourglass-python",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github-KPG:KadoProG/hourglass-python.git",
+  "repository": "https://github.com/KadoProG/hourglass-python.git",
   "author": "KadoProG <splatrain@gmail.com>",
   "license": "MIT",
   "scripts": {
