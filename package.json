@@ -5,8 +5,8 @@
   "author": "KadoProG <splatrain@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "dev": "source venv/bin/activate && python run.py",
     "prettier": "black .",
-    "dev": "source venv/bin/activate && pip install -r requirements.txt && black . && python run.py",
-    "prepare": "source venv/bin/activate && pip install -r requirements.txt"
+    "prepare": "python -m venv venv && source venv/bin/activate && pip install -r requirements.txt"
   }
 }
