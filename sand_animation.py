@@ -13,8 +13,7 @@ class SandAnimation:
 
     """アラームフラグ、Trueの場合はアラームを鳴らさない"""
 
-    def __init__(self, draw, sound, is_fixed: bool = False) -> None:
-        self.draw = draw
+    def __init__(self, sound, is_fixed: bool = False) -> None:
         self._sound = sound
         self._is_fixed = is_fixed
 

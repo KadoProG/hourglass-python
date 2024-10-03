@@ -7,10 +7,11 @@ import signal
 
 
 class Sound:
-    def __init__(self, stdscr):
+    def __init__(self, stdscr: curses.window = None):
         # M4Aファイルのロード
         self.stdscr = stdscr
-        self.stdscr.addstr(0, 0, "⏹")
+        if not stdscr is None:
+            self.stdscr.addstr(0, 0, "⏹")
         self.is_playing = False
         self.playback = None
         self.sound = AudioSegment.from_file("cat-mean.m4a", format="m4a")
@@ -21,13 +22,15 @@ class Sound:
         self.is_playing = True
         self.playback = _play_with_simpleaudio(self.sound)
         self.stop_worker = self.playback.stop
-        self.stdscr.addstr(0, 0, "▶️")
+        if not self.stdscr is None:
+            self.stdscr.addstr(0, 0, "▶️")
 
     def stop(self):
         if self.playback and self.is_playing:
             self.stop_worker()
             self.is_playing = False
-            self.stdscr.addstr(0, 0, "⏹")
+            if not self.stdscr is None:
+                self.stdscr.addstr(0, 0, "⏹")
 
     def run(self, is_playing: Optional[bool] = None):
         self.stdscr.addstr(0, 4, "[space]再生/停止、[q]終了")

@@ -67,8 +67,8 @@ def main(stdscr: curses.window):
 
     # 描画クラスを作成
     draw = Draw(stdscr, is_fixed)
-    sound = Sound(stdscr)
-    sandAnimation = SandAnimation(draw, sound, is_fixed)
+    sound = Sound()
+    sandAnimation = SandAnimation(sound, is_fixed)
 
     # 停止イベントを作成
     stop_event = threading.Event()
