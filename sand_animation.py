@@ -8,7 +8,8 @@ class SandAnimation:
     _angle = INIT_ANGLE
     _is_positive_sine = True
     _is_positive_cosine = True
-    _is_finish_falling = False
+    _is_finish_falling = True
+    """アラームフラグ、Trueの場合はアラームを鳴らさない"""
 
     def __init__(self, draw, sound, is_fixed: bool = False) -> None:
         self.draw = draw
@@ -81,7 +82,7 @@ class SandAnimation:
                 ball["x"] = x
                 ball["y"] = y
 
-        return self._balls, self._angle, self._is_finish_falling
+        return self._balls, self._angle, self._sound.is_playing
 
     def fall_dot(self, canvas_index: int) -> None:
         """
@@ -107,23 +108,24 @@ class SandAnimation:
                     del self._balls[i][index]
                     return True
             return False
+
+        index = self._find_index(
+            self._balls[canvas_index], lambda ball: ball["x"] == x and ball["y"] == y
+        )
+        if index == -1:
+            return False
         else:
-            index = self._find_index(
-                self._balls[canvas_index],
-                lambda ball: ball["x"] == x and ball["y"] == y,
-            )
-            if index == -1:
-                return False
-            else:
-                del self._balls[canvas_index][index]
-                return True
+            del self._balls[canvas_index][index]
+            return True
 
     def set_angle(self) -> None:
         """角度を設定する"""
+        if self._is_fixed:
+            return
+
         self._angle += 90
         if self._angle > 180:
             self._angle -= 360
-        self._is_finish_falling = False
         self._sound.stop()
         self._is_positive_sine = math.sin((self._angle * math.pi) / 180) >= 0
         self._is_positive_cosine = math.cos((self._angle * math.pi) / 180) >= 0
@@ -131,10 +133,6 @@ class SandAnimation:
     def fall_dot_through_canvas(self) -> None:
         """キャンバスを通過してドットを落とす"""
         if math.tan((self._angle * math.pi) / 180) <= 0:
-            self._sound.stop()
-            return
-        if math.tan((self._angle * math.pi) / 180) <= 0:
-            self._is_finish_falling = False
             return
 
         # キャンバス通過：削除処理
@@ -143,14 +141,14 @@ class SandAnimation:
         if result:
             # キャンバス通過：挿入処理（削除に成功時）
             self.fall_dot(1 if self._is_positive_sine else 0)
-            self._is_finish_falling = False
+            self._is_finish_falling = False  # 通過したので、フラグを戻す
         elif (
             not self._is_finish_falling
             and len(self._balls[0 if self._is_positive_sine else 1]) == 0
         ):
             # 既に全部通過済みの場合、１回だけ実行
-            self._sound.play()
             self._is_finish_falling = True
+            self._sound.play()
 
     def _find_index(self, lst, predicate) -> int:
         for i, x in enumerate(lst):
@@ -160,8 +158,14 @@ class SandAnimation:
 
     def move_ball_to_top(self):
         """現在のボールを全て上に移動する"""
-        if self._is_fixed:
-            ball_length = len(self._balls[1])
-            self._balls[1] = []
-            for _ in range(ball_length):
-                self._fall_dot(0)
+        if not self._is_fixed:
+            return
+
+        if self._sound.is_playing:
+            self._sound.stop()
+            return
+
+        ball_length = len(self._balls[1])
+        self._balls[1] = []
+        for _ in range(ball_length):
+            self.fall_dot(0)

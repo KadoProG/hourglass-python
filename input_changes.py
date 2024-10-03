@@ -7,6 +7,8 @@ def input_thread(stop_event, stdscr, draw, sandAnimation):
     while not stop_event.is_set():
         key = stdscr.getch()
         if key == ord("a"):
+            sandAnimation.move_ball_to_top()
+        if key == ord("r"):
             sandAnimation.set_angle()
         if key == ord("q"):
             os.kill(os.getpid(), signal.SIGINT)
