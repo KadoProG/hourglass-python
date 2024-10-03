@@ -9,6 +9,8 @@ class SandAnimation:
     _is_positive_sine = True
     _is_positive_cosine = True
     _is_finish_falling = True
+    is_paused = False
+
     """アラームフラグ、Trueの場合はアラームを鳴らさない"""
 
     def __init__(self, draw, sound, is_fixed: bool = False) -> None:
@@ -122,6 +124,7 @@ class SandAnimation:
         """角度を設定する"""
         if self._is_fixed:
             return
+        self.is_paused = False
 
         self._angle += 90
         if self._angle > 180:
@@ -149,12 +152,35 @@ class SandAnimation:
             # 既に全部通過済みの場合、１回だけ実行
             self._is_finish_falling = True
             self._sound.play()
+            self.is_paused = True
 
     def _find_index(self, lst, predicate) -> int:
         for i, x in enumerate(lst):
             if predicate(x):
                 return i
         return -1
+
+    def start_stop_click(self):
+        if not self.is_paused:
+            # 止める動作
+            if self._sound.is_playing:
+                self._sound.stop()
+                return
+            self.is_paused = True
+        else:
+            if self._sound.is_playing:
+                self._sound.stop()
+                return
+            self.is_paused = False
+            if not self._is_finish_falling or not self._is_fixed:
+                return
+            balls0_length = len(self._balls[0])
+            balls1_length = len(self._balls[1])
+
+            if balls0_length == 0:
+                self._balls[1] = []
+                for _ in range(balls1_length):
+                    self.fall_dot(0)
 
     def move_ball_to_top(self):
         """現在のボールを全て上に移動する"""

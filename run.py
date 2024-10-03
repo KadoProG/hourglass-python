@@ -16,7 +16,7 @@ from sound import Sound
 import argparse
 
 
-def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation, sound: Sound):
+def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation):
     """フレーム単位で無限ループの処理を実行する関数"""
     interval_frequency = INTERVAL_FALLING / FRAMERATE
     interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
@@ -28,13 +28,22 @@ def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation, sound: 
     # 投げたボールをカウント
     ball_count = 0
 
-    draw.draw_frame([[], []], INIT_ANGLE, False, frame_count, ball_count)
+    draw.draw_frame([[], []], INIT_ANGLE, False, frame_count)
+
+    balls = [[], []]
+    angle = INIT_ANGLE
+    is_finish_falling = False
 
     while True:
-        balls, angle, is_finish_falling = sandAnimation.next_frame()
-        draw.draw_frame(balls, angle, is_finish_falling, frame_count, ball_count)
-        frame_count += 1
         time.sleep(FRAMERATE)
+        if sandAnimation.is_paused:
+            draw.draw_frame(
+                balls, angle, sandAnimation._sound.is_playing, frame_count, True
+            )
+            continue
+        balls, angle, is_finish_falling = sandAnimation.next_frame()
+        draw.draw_frame(balls, angle, is_finish_falling, frame_count)
+        frame_count += 1
 
         # 初期のボールを落とす
         if frame_count % interval_frequency == 0 and ball_count < BALL_LENGTH:
@@ -57,7 +66,7 @@ def main(stdscr: curses.window):
     is_fixed = args.fix
 
     # 描画クラスを作成
-    draw = Draw(stdscr)
+    draw = Draw(stdscr, is_fixed)
     sound = Sound(stdscr)
     sandAnimation = SandAnimation(draw, sound, is_fixed)
 
@@ -72,7 +81,7 @@ def main(stdscr: curses.window):
     input_thread_obj.start()
 
     # メイン処理を実行
-    frame_routine_task_process(draw, sandAnimation, sound)
+    frame_routine_task_process(draw, sandAnimation)
 
 
 if __name__ == "__main__":

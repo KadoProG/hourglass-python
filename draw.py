@@ -23,8 +23,9 @@ class Draw:
     _logs = []
     _count_angle_diff_frame = 1 / FRAMERATE
     _pre_angle = INIT_ANGLE
+    _is_fixed = False
 
-    def __init__(self, stdscr: curses.window) -> None:
+    def __init__(self, stdscr: curses.window, is_fixed: bool = False) -> None:
         self._stdscr = stdscr
         # 非エコーモードに設定
         curses.noecho()
@@ -36,13 +37,15 @@ class Draw:
             1, curses.COLOR_RED, curses.COLOR_BLACK
         )  # カウンターの数字を赤色に設定
 
+        self._is_fixed = is_fixed
+
     def draw_frame(
         self,
         balls: list[list[dict[str, int]]],
         angle: int,
         is_finish_falling: bool,
         frame_count: int,
-        ball_count: int,
+        is_paused: bool = False,
     ) -> None:
         self._stdscr.clear()
         # 空のグリッドを作成
@@ -52,7 +55,9 @@ class Draw:
         self._draw_grid(balls[1], 1)
 
         # --------１行目のメッセージ
-        row0_message = f"frame: {frame_count:> 5} ball: {ball_count:> 3} angle: {angle:> 4}° GRID_SIZE: {GRID_SIZE:< 3}"
+        row0_message = (
+            f"frame: {frame_count:> 5} angle: {angle:> 4}° GRID_SIZE: {GRID_SIZE:< 3}"
+        )
         self._stdscr.addstr(0, 0, row0_message)
 
         # --------２行目のメッセージ
@@ -61,9 +66,14 @@ class Draw:
                 self._pre_angle = angle
                 self._count_angle_diff_frame = 0
             self._stdscr.addstr(1, 4, "[")
-            self._stdscr.addstr("keypress", curses.color_pair(1))
+            self._stdscr.addstr("event", curses.color_pair(1))
             self._stdscr.addstr(f"] angleを{angle:> 4}° に変更")
             self._count_angle_diff_frame += 1
+
+        if is_paused:
+            self._stdscr.addstr(1, 4, "[")
+            self._stdscr.addstr("pause", curses.color_pair(1))
+            self._stdscr.addstr("]")
 
         # --------グリッドを描写
         for index, row in enumerate(self._grid):
@@ -86,8 +96,9 @@ class Draw:
         self._stdscr.addstr(GRID_SIZE * 2 + 3, 1, "[")
         self._stdscr.addstr("a", curses.color_pair(1))
         self._stdscr.addstr(f"]start/stop  [")
-        self._stdscr.addstr("r", curses.color_pair(1))
-        self._stdscr.addstr(f"]rotate  [")
+        if not self._is_fixed:
+            self._stdscr.addstr("r", curses.color_pair(1))
+            self._stdscr.addstr(f"]rotate  [")
         self._stdscr.addstr("t", curses.color_pair(1))
         self._stdscr.addstr(f"]log  [")
         self._stdscr.addstr("q", curses.color_pair(1))
