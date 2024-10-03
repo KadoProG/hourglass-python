@@ -82,11 +82,20 @@ class Draw:
                 index + 2, GRID_SIZE * 4 + 1, f"{index:> 2}", curses.color_pair(1)
             )
 
+        # --------キーボードショートカットを表示
+        self._stdscr.addstr(GRID_SIZE * 2 + 3, 1, "[")
+        self._stdscr.addstr("a", curses.color_pair(1))
+        self._stdscr.addstr(f"]start/stop  [")
+        self._stdscr.addstr("r", curses.color_pair(1))
+        self._stdscr.addstr(f"]rotate  [")
+        self._stdscr.addstr("t", curses.color_pair(1))
+        self._stdscr.addstr(f"]test log")
+
         # --------ログを表示
         for index, log in enumerate(self._logs):
-            self._stdscr.addstr(
-                GRID_SIZE * 2 + 5 + index, 0, "[" + str(index + 1) + "]" + log
-            )
+            self._stdscr.addstr(GRID_SIZE * 2 + 4 + index, 0, "[")
+            self._stdscr.addstr(str(index + 1), curses.color_pair(1))
+            self._stdscr.addstr(f"]{log}")
 
         # --------アラームを表示
         if is_finish_falling:
