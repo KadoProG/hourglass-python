@@ -89,7 +89,9 @@ class Draw:
         self._stdscr.addstr("r", curses.color_pair(1))
         self._stdscr.addstr(f"]rotate  [")
         self._stdscr.addstr("t", curses.color_pair(1))
-        self._stdscr.addstr(f"]test log")
+        self._stdscr.addstr(f"]log  [")
+        self._stdscr.addstr("q", curses.color_pair(1))
+        self._stdscr.addstr(f"]exit")
 
         # --------ログを表示
         for index, log in enumerate(self._logs):
