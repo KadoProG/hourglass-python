@@ -3,9 +3,11 @@ from config import GRID_SIZE, INIT_ANGLE
 from typing import Optional
 from dotenv import load_dotenv
 import os
+import requests
 
 load_dotenv()
 boot = os.getenv("BOOT")
+url = os.getenv("API_URL")
 
 
 class SandAnimation:
@@ -168,6 +170,8 @@ class SandAnimation:
             self._is_finish_falling = True
             self._sound.play()
             self.is_paused = True
+            if url:
+                requests.get(url)
 
     def _find_index(self, lst, predicate) -> int:
         for i, x in enumerate(lst):
