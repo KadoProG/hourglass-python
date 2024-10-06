@@ -25,13 +25,17 @@ def initialize_sound():
     """
     if boot == "raspberrypi":
         from app.sound.bibideba import Bibideba
+
         return Bibideba()
     elif boot == "macos":
         from app.sound.sound import Sound
+
         return Sound()
     else:
         from app.sound.sound_mock import SoundMock
+
         return SoundMock()
+
 
 def initialize_parser():
     """
@@ -41,6 +45,7 @@ def initialize_parser():
     parser.add_argument("--fix", help="optional", action="store_true")
     args = parser.parse_args()
     return args.fix
+
 
 def curses_main(stdscr: curses.window, is_fixed: bool):
     """
@@ -60,23 +65,23 @@ def curses_main(stdscr: curses.window, is_fixed: bool):
     # raspberrypi環境でのボタンスレッドの初期化
     if boot == "raspberrypi":
         from app.events.button import button_thread
+
         button_thread_obj = threading.Thread(
-            target=button_thread, 
-            args=(stop_event, sandAnimation.start_stop_click), 
-            daemon=True
+            target=button_thread,
+            args=(stop_event, sandAnimation.start_stop_click),
+            daemon=True,
         )
         button_thread_obj.start()
 
     # 入力スレッドの開始
     input_thread_obj = threading.Thread(
-        target=input_thread, 
-        args=(stop_event, stdscr, draw, sandAnimation), 
-        daemon=True
+        target=input_thread, args=(stop_event, stdscr, draw, sandAnimation), daemon=True
     )
     input_thread_obj.start()
 
     # メイン処理の実行
     frame_routine_task_process(draw, sandAnimation, is_fixed)
+
 
 def wrapper_main(is_fixed: bool):
     """
@@ -84,12 +89,14 @@ def wrapper_main(is_fixed: bool):
     """
     curses.wrapper(curses_main, is_fixed)
 
+
 def run_flask_app():
     """
     Flaskアプリケーションを実行
     """
     app = create_app(sandAnimation)
     app.run(debug=True, use_reloader=False)
+
 
 def main():
     """
@@ -113,6 +120,7 @@ def main():
     flask_thread.join()
     curses_thread.join()
 
+
 # アプリケーションを実行
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
