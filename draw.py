@@ -1,6 +1,11 @@
 from config import GRID_SIZE, FRAMERATE, INIT_ANGLE
 import curses
 import math
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+boot = os.getenv("BOOT")
 
 
 class Draw:
@@ -25,9 +30,7 @@ class Draw:
     _pre_angle = INIT_ANGLE
     _is_fixed = False
 
-    def __init__(
-        self, stdscr: curses.window, boot: str, is_fixed: bool = False
-    ) -> None:
+    def __init__(self, stdscr: curses.window, is_fixed: bool = False) -> None:
         self._stdscr = stdscr
         # 非エコーモードに設定
         curses.noecho()

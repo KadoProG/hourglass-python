@@ -1,6 +1,11 @@
 import math
 from config import GRID_SIZE, INIT_ANGLE
 from typing import Optional
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+boot = os.getenv("BOOT")
 
 
 class SandAnimation:
