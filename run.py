@@ -1,4 +1,4 @@
-from src.config import (
+from app.config import (
     GRID_SIZE,
     FRAMERATE,
     INTERVAL_FALLING,
@@ -9,9 +9,9 @@ from src.config import (
 import curses
 import threading
 import time
-from src.events.input_changes import input_thread
-from src.draw import Draw
-from src.sand_animation import SandAnimation
+from app.events.input_changes import input_thread
+from app.draw import Draw
+from app.sand_animation import SandAnimation
 import argparse
 import os
 from dotenv import load_dotenv
@@ -44,7 +44,7 @@ def frame_routine_task_process(
     while True:
         time.sleep(FRAMERATE)
         if not is_fixed and boot == "raspberrypi":
-            from src.events.mpu_events import get_mpu_angle
+            from app.events.mpu_events import get_mpu_angle
 
             roll, _ = get_mpu_angle()
             sandAnimation.set_angle(-roll + 45)
@@ -86,23 +86,23 @@ def main(stdscr: curses.window):
     sound = None
 
     if boot == "raspberrypi":
-        from src.sound.bibideba import Bibideba
+        from app.sound.bibideba import Bibideba
 
         sound = Bibideba()
     elif boot == "macos":
-        from src.sound.sound import Sound
+        from app.sound.sound import Sound
 
         sound = Sound()
 
     else:
-        from src.sound.sound_mock import SoundMock
+        from app.sound.sound_mock import SoundMock
 
         sound = SoundMock()
 
     sandAnimation = SandAnimation(sound, is_fixed)
 
     if boot == "raspberrypi":
-        from src.events.button import button_thread
+        from app.events.button import button_thread
 
         button_thread_obj = threading.Thread(
             target=button_thread,

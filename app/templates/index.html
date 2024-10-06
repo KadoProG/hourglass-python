@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>砂時計App</title>
+  </head>
+  <body>
+    <h1>砂時計App</h1>
+    <p>砂時計を回してみよう！</p>
+    <button id="startButton">>スタート/ストップ</button>
+    <button id="angleButton">>アングル</button>
+    <p id="responseMessage"></p>
+  </body>
+  <script>
+    document
+      .getElementById("startButton")
+      .addEventListener("click", function () {
+        fetch("/start", {
+          method: "GET",
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.text();
+          })
+          .then((data) => {
+            document.getElementById("responseMessage").textContent = data;
+          })
+          .catch((error) => {
+            document.getElementById("responseMessage").textContent =
+              "Error: " + error.message;
+          });
+      });
+
+    document
+      .getElementById("angleButton")
+      .addEventListener("click", function () {
+        fetch("/angle", {
+          method: "GET",
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.text();
+          })
+          .then((data) => {
+            document.getElementById("responseMessage").textContent = data;
+          })
+          .catch((error) => {
+            document.getElementById("responseMessage").textContent =
+              "Error: " + error.message;
+          });
+      });
+  </script>
+</html>
