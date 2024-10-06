@@ -43,7 +43,7 @@ def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation):
         time.sleep(FRAMERATE)
         if sandAnimation.is_paused:
             draw.draw_frame(
-                balls, angle, sandAnimation._sound.is_playing, frame_count, True
+                balls, angle, sandAnimation._sound.is_playing(), frame_count, True
             )
             continue
         balls, angle, is_finish_falling = sandAnimation.next_frame()
@@ -82,10 +82,10 @@ def main(stdscr: curses.window):
         from sound import Sound
 
         sound = Sound()
-    
+
     else:
         from sound_mock import SoundMock
-        
+
         sound = SoundMock()
 
     sandAnimation = SandAnimation(sound, is_fixed)

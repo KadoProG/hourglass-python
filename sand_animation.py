@@ -83,7 +83,7 @@ class SandAnimation:
                 ball["x"] = x
                 ball["y"] = y
 
-        return self._balls, self._angle, self._sound.is_playing
+        return self._balls, self._angle, self._sound.is_playing()
 
     def fall_dot(self, canvas_index: int) -> None:
         """

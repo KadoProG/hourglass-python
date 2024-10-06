@@ -20,13 +20,10 @@ class Bibideba:
             # 非エコーモードに設定
             curses.noecho()
             self._stdscr.nodelay(True)
-            # 色の初期化
+            # 色の初期化 (赤色)
             curses.start_color()
-            curses.init_pair(
-                1, curses.COLOR_RED, curses.COLOR_BLACK
-            )  # カウンターの数字を赤色に設定
-
-            # --------キーボードショートカットを表示
+            curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+            # キーボードショートカットを表示
             self._stdscr.addstr(0, 3, "[")
             self._stdscr.addstr("space", curses.color_pair(1))
             self._stdscr.addstr(f"]start/stop  [")

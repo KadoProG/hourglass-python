@@ -4,9 +4,9 @@ class SoundMock:
 
     def play(self):
         self.played = True
-    
+
     def stop(self):
         self.played = False
-      
+
     def is_playing(self):
         return self.played
