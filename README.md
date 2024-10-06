@@ -7,14 +7,16 @@
 ```shell
 cp .env.example .env # 環境変数のコピー
 pip install -r requirements.txt
-python run.py
+python run.py # 通常モード
+python run.py --fix # 固定モード
 ```
 
 ### node が入っている場合
 
 ```shell
 yarn # install package
-yarn dev
+yarn dev # 通常モード
+yarn dev --fix # 固定モード
 ```
 
 ### オプションで仮想環境の構築
@@ -25,6 +27,19 @@ source venv/bin/activate
 ```
 
 仮想環境を終了する場合 `deactivate`
+
+### env の項目
+
+```shell
+BOOT=
+API_URL=
+```
+
+- **BOOT**：モードを選択
+  - `macos`：mac 上で音を鳴らすことができる
+  - `raspberrypi`：raspberrypi のブザーから音を鳴らすことができる
+  - none(空白)：音を鳴らさない
+- **API_URL**：アラーム時の API_URL を指定
 
 ## プレビュー
 
