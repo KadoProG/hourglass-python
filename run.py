@@ -21,7 +21,9 @@ load_dotenv()
 boot = os.getenv("BOOT")
 
 
-def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation):
+def frame_routine_task_process(
+    draw: Draw, sandAnimation: SandAnimation, is_fixed: bool
+):
     """フレーム単位で無限ループの処理を実行する関数"""
     interval_frequency = INTERVAL_FALLING / FRAMERATE
     interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
@@ -41,6 +43,12 @@ def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation):
 
     while True:
         time.sleep(FRAMERATE)
+        if not is_fixed and boot == "raspberrypi":
+            from mpu_events import get_mpu_angle
+
+            roll, _ = get_mpu_angle()
+            sandAnimation.set_angle(-roll + 45)
+
         if sandAnimation.is_paused:
             draw.draw_frame(
                 balls, angle, sandAnimation._sound.is_playing(), frame_count, True
@@ -101,7 +109,7 @@ def main(stdscr: curses.window):
     input_thread_obj.start()
 
     # メイン処理を実行
-    frame_routine_task_process(draw, sandAnimation)
+    frame_routine_task_process(draw, sandAnimation, is_fixed)
 
 
 if __name__ == "__main__":

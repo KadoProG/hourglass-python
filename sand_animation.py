@@ -124,18 +124,29 @@ class SandAnimation:
             del self._balls[canvas_index][index]
             return True
 
-    def set_angle(self) -> None:
+    def set_angle(self, angle: int = None) -> None:
         """角度を設定する"""
         if self._is_fixed:
             return
-        self.is_paused = False
 
-        self._angle += 90
+        if angle is None:
+            self._angle += 90
+        else:
+            self._angle = angle
+
         if self._angle > 180:
             self._angle -= 360
-        self._sound.stop()
-        self._is_positive_sine = math.sin((self._angle * math.pi) / 180) >= 0
-        self._is_positive_cosine = math.cos((self._angle * math.pi) / 180) >= 0
+
+        pre_is_positive_sine = math.sin((self._angle * math.pi) / 180) >= 0
+        pre_is_positive_cosine = math.cos((self._angle * math.pi) / 180) >= 0
+        if not (
+            pre_is_positive_cosine == self._is_positive_cosine
+            and pre_is_positive_sine == self._is_positive_sine
+        ):
+            self.is_paused = False
+            self._sound.stop()
+            self._is_positive_sine = pre_is_positive_sine
+            self._is_positive_cosine = pre_is_positive_cosine
 
     def fall_dot_through_canvas(self) -> None:
         """キャンバスを通過してドットを落とす"""
@@ -167,12 +178,12 @@ class SandAnimation:
     def start_stop_click(self):
         if not self.is_paused:
             # 止める動作
-            if self._sound.is_playing:
+            if self._sound.is_playing():
                 self._sound.stop()
                 return
             self.is_paused = True
         else:
-            if self._sound.is_playing:
+            if self._sound.is_playing():
                 self._sound.stop()
                 return
             self.is_paused = False

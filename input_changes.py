@@ -11,6 +11,7 @@ def input_thread(stop_event, stdscr, draw, sandAnimation):
         if key == ord("r"):
             sandAnimation.set_angle()
         if key == ord("q"):
+            sandAnimation._sound.stop()
             os.kill(os.getpid(), signal.SIGINT)
         if key == ord("t"):
             draw.print_log("test")
