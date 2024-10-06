@@ -1,4 +1,4 @@
-from src.config import GRID_SIZE, FRAMERATE, INIT_ANGLE
+from app.config import GRID_SIZE, FRAMERATE, INIT_ANGLE
 import curses
 import math
 from dotenv import load_dotenv
