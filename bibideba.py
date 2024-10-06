@@ -11,8 +11,8 @@ class Bibideba:
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(BUZZER_PIN, GPIO.OUT, initial=GPIO.LOW)
-        self.buzzer = GPIO.PWM(BUZZER_PIN, 1)
-        self.stop_flag = threading.Event()
+        self._buzzer = GPIO.PWM(BUZZER_PIN, 1)
+        self._stop_flag = threading.Event()
 
         # --------cursesの設定
         self._stdscr = stdscr
@@ -40,19 +40,22 @@ class Bibideba:
     def play(self):
         if not self._stdscr is None:
             self._stdscr.addstr(0, 0, "▶️")
-        self.stop_flag.clear()
-        self.buzzer.start(50)
+        self._stop_flag.clear()
+        self._buzzer.start(50)
         play_thread = threading.Thread(target=self._play_song)
         play_thread.start()
 
     def stop(self):
         if not self._stdscr is None:
             self._stdscr.addstr(0, 0, "⏹")
-        self.stop_flag.set()
-        self.buzzer.stop()
+        self._stop_flag.set()
+        self._buzzer.stop()
+
+    def is_playing(self) -> bool:
+        return not self._stop_flag.is_set()
 
     def _play_song(self):
-        while not self.stop_flag.is_set():
+        while not self._stop_flag.is_set():
             self._play_bibideba_chorus_common()  # 繰り返し部分
 
             self._play_sound(320, 2, 0)  # 混（こん）
@@ -124,28 +127,23 @@ class Bibideba:
         self._play_sound(382, 2, 0)  #
 
     def _play_sound(self, tone: int, devide: float, pause: int):
-        if self.stop_flag.is_set():
+        if self._stop_flag.is_set():
             return
-
-        self.buzzer.ChangeFrequency(tone)
+        self._buzzer.ChangeFrequency(tone)
         time.sleep(devide * 0.127)
         if pause > 0:
-            self.buzzer.stop()
+            self._buzzer.stop()
             time.sleep(pause)
 
 
 def main(stdscr: curses.window):
-    # 非エコーモードに設定
-    curses.noecho()
-    stdscr.nodelay(True)
-
     bibideba = Bibideba(stdscr, True)
 
     try:
         while True:
             key = stdscr.getch()
             if key == ord(" "):
-                if bibideba.stop_flag.is_set():
+                if not bibideba.is_playing():
                     bibideba.play()
                 else:
                     bibideba.stop()
@@ -154,7 +152,6 @@ def main(stdscr: curses.window):
                 break
     except KeyboardInterrupt:
         bibideba.stop()  # ctrl + C で終了時
-        pass
 
 
 if __name__ == "__main__":
