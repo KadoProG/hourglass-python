@@ -12,8 +12,13 @@ import time
 from input_changes import input_thread
 from draw import Draw
 from sand_animation import SandAnimation
-from sound import Sound
 import argparse
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+boot = os.getenv("BOOT")
 
 
 def frame_routine_task_process(draw: Draw, sandAnimation: SandAnimation):
@@ -67,7 +72,17 @@ def main(stdscr: curses.window):
 
     # 描画クラスを作成
     draw = Draw(stdscr, is_fixed)
-    sound = Sound()
+    sound = None
+
+    if boot == "raspberrypi":
+        from bibideba import Bibideba
+
+        sound = Bibideba()
+    else:
+        from sound import Sound
+
+        sound = Sound()
+
     sandAnimation = SandAnimation(sound, is_fixed)
 
     # 停止イベントを作成
