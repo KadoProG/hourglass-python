@@ -22,6 +22,6 @@ def button_thread(stop_event, start_stop_click):
                 start_stop_click()
                 pre_btn = 1
             if btn == 0:
-              pre_btn = 0
+                pre_btn = 0
     except KeyboardInterrupt:
         print("Exiting...")
