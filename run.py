@@ -78,6 +78,9 @@ def main(stdscr: curses.window):
 
     is_fixed = args.fix
 
+    # 停止イベントを作成
+    stop_event = threading.Event()
+
     # 描画クラスを作成
     draw = Draw(stdscr, is_fixed)
     sound = None
@@ -98,8 +101,16 @@ def main(stdscr: curses.window):
 
     sandAnimation = SandAnimation(sound, is_fixed)
 
-    # 停止イベントを作成
-    stop_event = threading.Event()
+    if boot == "raspberrypi":
+        from button import button_thread
+
+        button_thread_obj = threading.Thread(
+            target=button_thread,
+            args=(stop_event, sandAnimation.start_stop_click),
+            daemon=True,
+        )
+        # 入力スレッドを開始
+        button_thread_obj.start()
 
     input_thread_obj = threading.Thread(
         target=input_thread, args=(stop_event, stdscr, draw, sandAnimation), daemon=True

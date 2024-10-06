@@ -196,17 +196,3 @@ class SandAnimation:
                 self._balls[1] = []
                 for _ in range(balls1_length):
                     self.fall_dot(0)
-
-    def move_ball_to_top(self):
-        """現在のボールを全て上に移動する"""
-        if not self._is_fixed:
-            return
-
-        if self._sound.is_playing:
-            self._sound.stop()
-            return
-
-        ball_length = len(self._balls[1])
-        self._balls[1] = []
-        for _ in range(ball_length):
-            self.fall_dot(0)
