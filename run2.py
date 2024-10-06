@@ -1,4 +1,4 @@
-from app import create_app
+from app.flask_init import create_app
 import curses
 import threading
 import argparse

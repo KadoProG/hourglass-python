@@ -1,5 +1,5 @@
 from flask import render_template
-from app import _sandAnimation as sandAnimation
+from app.flask_init import _sandAnimation as sandAnimation
 
 
 def index():
