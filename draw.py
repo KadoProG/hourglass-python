@@ -25,7 +25,9 @@ class Draw:
     _pre_angle = INIT_ANGLE
     _is_fixed = False
 
-    def __init__(self, stdscr: curses.window, is_fixed: bool = False) -> None:
+    def __init__(
+        self, stdscr: curses.window, boot: str, is_fixed: bool = False
+    ) -> None:
         self._stdscr = stdscr
         # 非エコーモードに設定
         curses.noecho()
@@ -38,6 +40,25 @@ class Draw:
         )  # カウンターの数字を赤色に設定
 
         self._is_fixed = is_fixed
+
+        # --------ラズベリーパイ仕様のモードではGPIO関連を読み込む
+        self._device = None
+        self._canvas = None
+        if boot == "raspberrypi":
+            # 1. **VCC** - 5V（ピン2または4）
+            # 2. **GND** - GND（ピン6、9、14、20、25、30、34、39のいずれか）
+            # 3. **DIN** - MOSI（ピン19）
+            # 4. **CS** - CE0（ピン24）
+            # 5. **CLK** - SCLK（ピン23）
+
+            from luma.core.interface.serial import spi, noop
+            from luma.core.render import canvas
+            from luma.led_matrix.device import max7219
+
+            # 初期設定
+            serial = spi(port=0, device=0, gpio=noop())
+            self._device = max7219(serial, cascaded=2, block_orientation=90, rotate=0)
+            self._canvas = canvas
 
     def draw_frame(
         self,
@@ -79,6 +100,16 @@ class Draw:
         for index, row in enumerate(self._grid):
             row_text = ("  " * GRID_SIZE if index >= GRID_SIZE else "") + " ".join(row)
             self._stdscr.addstr(index + 2, 2, row_text)
+
+        if not self._device is None and not self._canvas is None:
+            with self._canvas(self._device) as draw:
+                for index, ball_items in enumerate(balls):
+                    for ball in ball_items:
+                        x = ball["x"]
+                        y = ball["y"]
+                        if index == 1:
+                            x += GRID_SIZE
+                        draw.point((x, y), fill="white")  # 点灯するドットを描画
 
         # --------これは数字を表示するための行
         row_text = ("").join([f"{i:> 2}" for i in range(GRID_SIZE)])[1:]

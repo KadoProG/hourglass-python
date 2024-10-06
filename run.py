@@ -71,7 +71,7 @@ def main(stdscr: curses.window):
     is_fixed = args.fix
 
     # 描画クラスを作成
-    draw = Draw(stdscr, is_fixed)
+    draw = Draw(stdscr, boot, is_fixed)
     sound = None
 
     if boot == "raspberrypi":
