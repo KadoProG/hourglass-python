@@ -78,10 +78,15 @@ def main(stdscr: curses.window):
         from bibideba import Bibideba
 
         sound = Bibideba()
-    else:
+    elif boot == "macos":
         from sound import Sound
 
         sound = Sound()
+    
+    else:
+        from sound_mock import SoundMock
+        
+        sound = SoundMock()
 
     sandAnimation = SandAnimation(sound, is_fixed)
 
