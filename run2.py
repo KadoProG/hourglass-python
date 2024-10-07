@@ -13,6 +13,7 @@ import time
 # 環境変数の読み込み
 load_dotenv()
 boot = os.getenv("BOOT")
+sensor = os.getenv("SENSOR")
 
 
 # グローバルで sandAnimation を定義
@@ -63,7 +64,7 @@ def curses_main(stdscr: curses.window, is_fixed: bool):
     sandAnimation = SandAnimation(sound, is_fixed)
 
     # raspberrypi環境でのボタンスレッドの初期化
-    if boot == "raspberrypi":
+    if boot == "raspberrypi" and sensor == "true":
         from app.events.button import button_thread
 
         button_thread_obj = threading.Thread(
