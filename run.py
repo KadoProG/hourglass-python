@@ -15,6 +15,7 @@ from app.sand_animation import SandAnimation
 import argparse
 import os
 from dotenv import load_dotenv
+from app.sound import sound
 
 load_dotenv()
 
@@ -84,23 +85,8 @@ def main(stdscr: curses.window):
 
     # 描画クラスを作成
     draw = Draw(stdscr, is_fixed)
-    sound = None
 
-    if boot == "raspberrypi":
-        from app.sound.bibideba import Bibideba
-
-        sound = Bibideba()
-    elif boot == "macos":
-        from app.sound.sound import Sound
-
-        sound = Sound()
-
-    else:
-        from app.sound.sound_mock import SoundMock
-
-        sound = SoundMock()
-
-    sandAnimation = SandAnimation(sound, is_fixed)
+    sandAnimation = SandAnimation(sound(), is_fixed)
 
     if boot == "raspberrypi":
         from app.events.button import button_thread
