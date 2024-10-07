@@ -19,6 +19,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 boot = os.getenv("BOOT")
+sensor = os.getenv("SENSOR")
 
 
 def frame_routine_task_process(
@@ -43,7 +44,7 @@ def frame_routine_task_process(
 
     while True:
         time.sleep(FRAMERATE)
-        if not is_fixed and boot == "raspberrypi":
+        if not is_fixed and boot == "raspberrypi" and sensor == "true":
             from app.events.mpu_events import get_mpu_angle
 
             roll, _ = get_mpu_angle()
