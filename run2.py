@@ -9,6 +9,7 @@ from app.draw import Draw
 from app.events.input_changes import input_thread
 from app.sand_animation import SandAnimation
 import time
+from app.sound import sound
 
 # 環境変数の読み込み
 load_dotenv()
@@ -18,24 +19,6 @@ sensor = os.getenv("SENSOR")
 
 # グローバルで sandAnimation を定義
 sandAnimation = None
-
-
-def initialize_sound():
-    """
-    サウンドシステムを環境に応じて初期化する
-    """
-    if boot == "raspberrypi":
-        from app.sound.bibideba import Bibideba
-
-        return Bibideba()
-    elif boot == "macos":
-        from app.sound.sound import Sound
-
-        return Sound()
-    else:
-        from app.sound.sound_mock import SoundMock
-
-        return SoundMock()
 
 
 def initialize_parser():
@@ -58,10 +41,9 @@ def curses_main(stdscr: curses.window, is_fixed: bool):
 
     # 描画クラスとサウンドの初期化
     draw = Draw(stdscr, is_fixed, True)
-    sound = initialize_sound()
 
     # サンドアニメーションの初期化
-    sandAnimation = SandAnimation(sound, is_fixed)
+    sandAnimation = SandAnimation(sound(), is_fixed)
 
     # raspberrypi環境でのボタンスレッドの初期化
     if boot == "raspberrypi" and sensor == "true":
