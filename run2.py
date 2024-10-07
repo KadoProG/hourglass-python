@@ -95,7 +95,7 @@ def run_flask_app():
     Flaskアプリケーションを実行
     """
     app = create_app(sandAnimation)
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=False, host="0.0.0.0")
 
 
 def main():
