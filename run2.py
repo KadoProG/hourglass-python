@@ -57,7 +57,7 @@ def curses_main(stdscr: curses.window, is_fixed: bool):
     stop_event = threading.Event()
 
     # 描画クラスとサウンドの初期化
-    draw = Draw(stdscr, is_fixed)
+    draw = Draw(stdscr, is_fixed, True)
     sound = initialize_sound()
 
     # サンドアニメーションの初期化

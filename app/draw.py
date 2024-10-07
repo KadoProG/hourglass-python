@@ -30,7 +30,9 @@ class Draw:
     _pre_angle = INIT_ANGLE
     _is_fixed = False
 
-    def __init__(self, stdscr: curses.window, is_fixed: bool = False) -> None:
+    def __init__(
+        self, stdscr: curses.window, is_fixed: bool = False, is_web: bool = False
+    ) -> None:
         self._stdscr = stdscr
         # 非エコーモードに設定
         curses.noecho()
@@ -43,6 +45,7 @@ class Draw:
         )  # カウンターの数字を赤色に設定
 
         self._is_fixed = is_fixed
+        self._is_web = is_web
 
         # --------ラズベリーパイ仕様のモードではGPIO関連を読み込む
         self._device = None
@@ -143,6 +146,10 @@ class Draw:
             self._stdscr.addstr(GRID_SIZE * 2 + 4 + index, 0, "[")
             self._stdscr.addstr(str(index + 1), curses.color_pair(1))
             self._stdscr.addstr(f"]{log}")
+            
+        # --------Web URL を表示
+        if self._is_web:
+            self._stdscr.addstr(GRID_SIZE * 2 + 4, 1, "web: http://localhost:5000")
 
         # --------アラームを表示
         if is_finish_falling:
