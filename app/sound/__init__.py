@@ -16,7 +16,7 @@ def sound():
         return Bibideba()
     elif boot == "macos":
         from app.sound.sound import Sound
-        exit()
+
         return Sound()
     else:
         from app.sound.sound_mock import SoundMock

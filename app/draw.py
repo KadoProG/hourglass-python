@@ -146,7 +146,7 @@ class Draw:
             self._stdscr.addstr(GRID_SIZE * 2 + 4 + index, 0, "[")
             self._stdscr.addstr(str(index + 1), curses.color_pair(1))
             self._stdscr.addstr(f"]{log}")
-            
+
         # --------Web URL を表示
         if self._is_web:
             self._stdscr.addstr(GRID_SIZE * 2 + 4, 1, "web: http://localhost:5000")
