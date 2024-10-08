@@ -104,6 +104,19 @@ class Draw:
 
         # --------グリッドを描写
         for index, row in enumerate(self._grid):
+                # 外周の枠に応じた描写
+            if is_finish_falling:
+                for i in range(GRID_SIZE):
+                    self._grid[0][i] = "●"               # 上側の枠
+                    self._grid[GRID_SIZE - 1][i] = "●"   # 下側の枠
+                    self._grid[i][0] = "●"               # 左側の枠
+                    self._grid[i][GRID_SIZE - 1] = "●"   # 右側の枠
+
+                    self._grid[GRID_SIZE][i] = "●"               # 上側の枠
+                    self._grid[GRID_SIZE * 2 - 1][i] = "●"   # 下側の枠
+                    self._grid[GRID_SIZE + i][0] = "●"               # 左側の枠
+                    self._grid[GRID_SIZE + i][GRID_SIZE - 1] = "●"   # 右側の枠
+            
             row_text = ("  " * GRID_SIZE if index >= GRID_SIZE else "") + " ".join(row)
             self._stdscr.addstr(index + 2, 2, row_text)
 
