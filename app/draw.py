@@ -8,6 +8,20 @@ load_dotenv()
 boot = os.getenv("BOOT")
 
 
+outer_balls = [[], []]
+
+# 上と下の外周を格納
+for x in range(GRID_SIZE):
+    outer_balls[0].append({"x": x, "y": 0})  # 上端
+    outer_balls[0].append({"x": x, "y": GRID_SIZE - 1})  # 下端
+    outer_balls[0].append({"x": 0, "y": x})  # 左端
+    outer_balls[0].append({"x": GRID_SIZE - 1, "y": x})  # 右端
+    outer_balls[1].append({"x": x, "y": 0})  # 上端
+    outer_balls[1].append({"x": x, "y": GRID_SIZE - 1})  # 下端
+    outer_balls[1].append({"x": 0, "y": x})  # 左端
+    outer_balls[1].append({"x": GRID_SIZE - 1, "y": x})  # 右端
+
+
 class Draw:
     """
     描画を行うクラス
@@ -51,12 +65,6 @@ class Draw:
         self._device = None
         self._canvas = None
         if boot == "raspberrypi":
-            # 1. **VCC** - 5V（ピン2または4）
-            # 2. **GND** - GND（ピン6、9、14、20、25、30、34、39のいずれか）
-            # 3. **DIN** - MOSI（ピン19）
-            # 4. **CS** - CE0（ピン24）
-            # 5. **CLK** - SCLK（ピン23）
-
             from luma.core.interface.serial import spi, noop
             from luma.core.render import canvas
             from luma.led_matrix.device import max7219
@@ -77,6 +85,9 @@ class Draw:
         self._stdscr.clear()
         # 空のグリッドを作成
         self._grid = [["◯" for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE * 2)]
+
+        if is_finish_falling:
+            balls = outer_balls
 
         self._draw_grid(balls[0], 0)
         self._draw_grid(balls[1], 1)
@@ -104,19 +115,19 @@ class Draw:
 
         # --------グリッドを描写
         for index, row in enumerate(self._grid):
-                # 外周の枠に応じた描写
-            if is_finish_falling:
-                for i in range(GRID_SIZE):
-                    self._grid[0][i] = "●"               # 上側の枠
-                    self._grid[GRID_SIZE - 1][i] = "●"   # 下側の枠
-                    self._grid[i][0] = "●"               # 左側の枠
-                    self._grid[i][GRID_SIZE - 1] = "●"   # 右側の枠
+            #     # 外周の枠に応じた描写
+            # if is_finish_falling:
+            #     for i in range(GRID_SIZE):
+            #         self._grid[0][i] = "●"               # 上側の枠
+            #         self._grid[GRID_SIZE - 1][i] = "●"   # 下側の枠
+            #         self._grid[i][0] = "●"               # 左側の枠
+            #         self._grid[i][GRID_SIZE - 1] = "●"   # 右側の枠
 
-                    self._grid[GRID_SIZE][i] = "●"               # 上側の枠
-                    self._grid[GRID_SIZE * 2 - 1][i] = "●"   # 下側の枠
-                    self._grid[GRID_SIZE + i][0] = "●"               # 左側の枠
-                    self._grid[GRID_SIZE + i][GRID_SIZE - 1] = "●"   # 右側の枠
-            
+            #         self._grid[GRID_SIZE][i] = "●"               # 上側の枠
+            #         self._grid[GRID_SIZE * 2 - 1][i] = "●"   # 下側の枠
+            #         self._grid[GRID_SIZE + i][0] = "●"               # 左側の枠
+            #         self._grid[GRID_SIZE + i][GRID_SIZE - 1] = "●"   # 右側の枠
+
             row_text = ("  " * GRID_SIZE if index >= GRID_SIZE else "") + " ".join(row)
             self._stdscr.addstr(index + 2, 2, row_text)
 
