@@ -42,6 +42,7 @@ class Draw:
     _grid = [["◯" for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
     _logs = []
     _count_angle_diff_frame = 1 / FRAMERATE
+    _count_led_frame = 0
     _pre_angle = INIT_ANGLE
     _is_fixed = False
 
@@ -88,7 +89,11 @@ class Draw:
         self._grid = [["◯" for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE * 2)]
 
         if is_finish_falling and enable_alerm_led:
-            balls = outer_balls
+            self._count_led_frame += 1
+            if self._count_led_frame > 0 and self._count_led_frame < 1 / FRAMERATE / 2:
+                balls = outer_balls
+            elif not self._count_led_frame < 1 / FRAMERATE / 2:
+                self._count_led_frame = -1 / FRAMERATE / 2
 
         self._draw_grid(balls[0], 0)
         self._draw_grid(balls[1], 1)
