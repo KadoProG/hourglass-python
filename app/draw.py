@@ -6,6 +6,7 @@ import os
 
 load_dotenv()
 boot = os.getenv("BOOT")
+enable_alerm_led = os.getenv("ENABLE_ALERM_LED")
 
 
 outer_balls = [[], []]
@@ -86,7 +87,7 @@ class Draw:
         # 空のグリッドを作成
         self._grid = [["◯" for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE * 2)]
 
-        if is_finish_falling:
+        if is_finish_falling and enable_alerm_led:
             balls = outer_balls
 
         self._draw_grid(balls[0], 0)
