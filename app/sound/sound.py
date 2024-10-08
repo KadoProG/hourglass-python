@@ -11,7 +11,7 @@ class Sound:
         self._is_playing = False
         self.playback = None
         # M4Aファイルのロード
-        self.sound = AudioSegment.from_file("cat-mean.m4a", format="m4a")
+        self.sound = AudioSegment.from_file("public/cat-mean.m4a", format="m4a")
 
         # --------cursesの設定
         self._stdscr = stdscr
