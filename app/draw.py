@@ -166,7 +166,7 @@ class Draw:
 
         # --------Web URL を表示
         if self._is_web:
-            self._stdscr.addstr(GRID_SIZE * 2 + 4, 1, "web: http://localhost:5000")
+            self._stdscr.addstr(GRID_SIZE * 2 + 4, 1, "web: http://localhost:5500")
 
         # --------アラームを表示
         if is_finish_falling:
