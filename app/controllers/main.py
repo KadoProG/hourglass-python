@@ -7,7 +7,6 @@ def index():
 
 
 def start():
-    # global sandAnimation
     if sandAnimation:
         sandAnimation.start_stop_click()
         return "SandAnimation started"
@@ -16,7 +15,6 @@ def start():
 
 
 def angle():
-    # global sandAnimation
     if sandAnimation:
         sandAnimation.set_angle()
         return "Angle set"
