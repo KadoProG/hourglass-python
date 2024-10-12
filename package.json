@@ -7,6 +7,9 @@
   "scripts": {
     "dev": "source venv/bin/activate && python run.py",
     "prettier": "black .",
-    "prepare": "python -m venv venv && source venv/bin/activate && pip install -r requirements.txt"
+    "prepare": "python -m venv venv && source venv/bin/activate && pip install -r requirements.txt && husky install"
+  },
+  "devDependencies": {
+    "husky": "^9.1.6"
   }
 }
