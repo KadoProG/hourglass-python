@@ -13,7 +13,6 @@ import socketio
 import threading
 
 
-
 # 環境変数の読み込み
 load_dotenv()
 boot = os.getenv("BOOT")
@@ -39,15 +38,15 @@ def connect():
 @sio.event
 def message(data):
     try:
-        if data['type'] == "control":
-            print('Received control message:', data['control'])
-            if data['control'] == "start":
+        if data["type"] == "control":
+            print("Received control message:", data["control"])
+            if data["control"] == "start":
                 sandAnimation.start_stop_click()
-            elif data['control'] == "angle":
+            elif data["control"] == "angle":
                 sandAnimation.set_angle()
             else:
                 print("Unknown control message:", data)
-            
+
     except:
         print("Received message:", data)
 
@@ -64,8 +63,6 @@ sio.connect(socketio_url, auth=params)
 
 # サーバーにメッセージを送信
 sio.send("Hello from Python client!")
-
-
 
 
 def initialize_parser():

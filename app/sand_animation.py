@@ -20,7 +20,7 @@ class SandAnimation:
 
     """アラームフラグ、Trueの場合はアラームを鳴らさない"""
 
-    def __init__(self, sound, is_fixed: bool, sio = None) -> None:
+    def __init__(self, sound, is_fixed: bool, sio=None) -> None:
         self._sound = sound
         self._is_fixed = is_fixed
         self._sio = sio
@@ -172,7 +172,9 @@ class SandAnimation:
             self._sound.play()
             self.is_paused = True
             if not self._sio is None:
-                self._sio.emit("message", {"type": 'alert', 'alert': '砂が落ちきったよ'})
+                self._sio.emit(
+                    "message", {"type": "alert", "alert": "砂が落ちきったよ"}
+                )
             if url:
                 requests.get(url)
 
