@@ -18,6 +18,7 @@ import threading
 load_dotenv()
 boot = os.getenv("BOOT")
 sensor = os.getenv("SENSOR")
+socketio_url = os.getenv("SOCKETIO_URL")
 
 
 # グローバルで sandAnimation を定義
@@ -59,7 +60,7 @@ def disconnect():
 
 # サーバーに接続
 params = {"device": "raspberrypi", "nickname": "Python Client"}
-sio.connect("http://localhost:4000", auth=params)
+sio.connect(socketio_url, auth=params)
 
 # サーバーにメッセージを送信
 sio.send("Hello from Python client!")
