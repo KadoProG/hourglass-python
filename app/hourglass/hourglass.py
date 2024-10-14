@@ -43,7 +43,7 @@ class HourGlass:
         ):
             self.pass_canvas()
 
-        return self.upper_chamber.dots, self.lower_chamber.dots
+        return self.upper_chamber.dots, self.lower_chamber.dots, self._is_finish_falling
 
     def pass_canvas(self):
         """キャンバスを通過してボールを落とす"""
@@ -76,3 +76,13 @@ class HourGlass:
         ):
             self._is_finish_falling = True
             # 既に全部通過済みの場合、１回だけ実行
+
+    def set_angle(self, angle: int = None) -> None:
+        """角度を設定する"""
+        if angle is None:
+            self._angle += 90
+        else:
+            self._angle = angle
+
+        if self._angle > 180:
+            self._angle -= 360
