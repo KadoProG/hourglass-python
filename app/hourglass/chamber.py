@@ -40,7 +40,7 @@ class Chamber:
         self._is_positive_sine = math.sin((angle * math.pi) / 180) >= 0
         self._is_positive_cosine = math.cos((angle * math.pi) / 180) >= 0
 
-        for dot in self.dots:
+        for index, dot in enumerate(self.dots):
             x = dot.x + (1 if self._is_positive_sine else -1)
             y = dot.y + (1 if self._is_positive_cosine else -1)
 
@@ -67,14 +67,16 @@ class Chamber:
                 y += 1
                 is_bottom_end = True
 
-            # x軸とy軸の両方該当する場合、保存しアニメーション処理を終了
+            # x軸とy軸のともに奥の状態の場合、保存しアニメーション処理を終了
             if is_right_end and is_bottom_end:
                 dot.x = x
                 dot.y = y
                 continue
 
             # 他のボールとの衝突判定
-            for b in self.dots:
+            for index2, b in enumerate(self.dots):
+                if index == index2:
+                    continue
                 if b.x == x and b.y == y:
                     is_bottom_empty = False
                 if b.x == x and b.y == (y - 1 if self._is_positive_cosine else y + 1):
@@ -93,4 +95,3 @@ class Chamber:
 
             dot.x = x
             dot.y = y
-        print(self.dots)
