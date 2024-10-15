@@ -11,6 +11,7 @@ def main():
     # ここで使用される変数の初期化
     angle = INIT_ANGLE
     pre_is_finish_falling = True
+    is_paused = False
     is_positive_cosine = math.sin((angle * math.pi) / 180) >= 0
     is_positive_sine = math.cos((angle * math.pi) / 180) >= 0
     auto_rotation = 0
@@ -19,6 +20,7 @@ def main():
     hourglass = HourGlass()
     drawPygame = DrawPygame()
     sound = Sound()
+    upperDots, lowerDots = [], []
 
     while True:
         # イベント処理
@@ -31,6 +33,12 @@ def main():
                     pygame.quit()
                     sys.exit()
                 if event.key == pygame.K_a:
+                    if is_paused:
+                        is_paused = False
+                    elif sound.is_playing():
+                        sound.stop()
+                    else:
+                        is_paused = True
                     sound.stop()
                 elif event.key == pygame.K_w:
                     auto_rotation -= 1
@@ -55,7 +63,8 @@ def main():
         hourglass.set_angle(angle)
 
         # 次のアニメーションを描写
-        upperDots, lowerDots, is_finish_falling = hourglass.next_frame()
+        if not is_paused:
+            upperDots, lowerDots, is_finish_falling = hourglass.next_frame()
 
         # 砂時計が落ちきったらアラームを鳴らす
         if not pre_is_finish_falling and is_finish_falling:
@@ -76,7 +85,9 @@ def main():
             is_positive_cosine = pre_is_positive_cosine
 
         # 描写
-        drawPygame.draw(upperDots, lowerDots, angle, sound.is_playing(), auto_rotation)
+        drawPygame.draw(
+            upperDots, lowerDots, angle, sound.is_playing(), auto_rotation, is_paused
+        )
         drawPygame.clock.tick(1 / FRAMERATE)
 
 

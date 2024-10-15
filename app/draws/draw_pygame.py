@@ -25,7 +25,13 @@ class DrawPygame:
         self.canvas = pygame.Surface(canvas_size, pygame.SRCALPHA)
 
     def draw(
-        self, upper_dots, lower_dots, angle: int, is_alerm: bool, auto_rotation: int
+        self,
+        upper_dots,
+        lower_dots,
+        angle: int,
+        is_alerm: bool,
+        auto_rotation: int,
+        is_paused: bool = False,
     ):
         # オブジェクトを描画
         pygame.draw.rect(self.canvas, GREEN, (0, 0, self.chamba_size, self.chamba_size))
@@ -86,6 +92,15 @@ class DrawPygame:
             font = pygame.font.Font(None, 36)  # デフォルトフォント（サイズ36）
             # テキストの設定
             text = "Alerm!"
+            text_color = (0, 0, 0)  # 黒色
+            text_image = font.render(text, True, text_color)
+            self.screen.blit(text_image, (50, 50))
+
+        if is_paused:
+            # フォントの設定
+            font = pygame.font.Font(None, 36)  # デフォルトフォント（サイズ36）
+            # テキストの設定
+            text = "Pause!"
             text_color = (0, 0, 0)  # 黒色
             text_image = font.render(text, True, text_color)
             self.screen.blit(text_image, (50, 50))
