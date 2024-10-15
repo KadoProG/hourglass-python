@@ -8,17 +8,16 @@ import math
 
 
 def main():
-    hourglass = HourGlass()
-
-    # 回転角度
+    # ここで使用される変数の初期化
     angle = INIT_ANGLE
     pre_is_finish_falling = True
-    auto_rotation = 0
     is_positive_cosine = math.sin((angle * math.pi) / 180) >= 0
     is_positive_sine = math.cos((angle * math.pi) / 180) >= 0
+    auto_rotation = 0
 
+    # インスタンスの生成
+    hourglass = HourGlass()
     drawPygame = DrawPygame()
-
     sound = Sound()
 
     while True:
