@@ -14,6 +14,7 @@ class DrawPygame:
         info = pygame.display.Info()  # ディスプレイ情報を取得
         self.x, self.y = info.current_w / 2, info.current_h
         self.screen = pygame.display.set_mode((self.x, self.y), pygame.RESIZABLE)
+        pygame.display.set_caption("砂時計 App")
         self.clock = pygame.time.Clock()
 
         screen_radius = min(self.x, self.y) // 2
@@ -23,7 +24,9 @@ class DrawPygame:
         self.chamba_size = GRID_SIZE * self.radius
         self.canvas = pygame.Surface(canvas_size, pygame.SRCALPHA)
 
-    def draw(self, upper_dots, lower_dots, angle: int, is_alerm: bool):
+    def draw(
+        self, upper_dots, lower_dots, angle: int, is_alerm: bool, auto_rotation: int
+    ):
         # オブジェクトを描画
         pygame.draw.rect(self.canvas, GREEN, (0, 0, self.chamba_size, self.chamba_size))
 
@@ -65,18 +68,24 @@ class DrawPygame:
         self.screen.blit(rotated_canvas, rect)  # 回転したキャンバスをメイン画面に描画
 
         # フォントの設定
-        font = pygame.font.Font(None, 18)  # デフォルトフォント（サイズ36）
+        font = pygame.font.Font(None, 18)
         # テキストの設定
-        text = "[a]Start/Stop [t]Auto Rotation [r]Custom Rotation [q]Quit"
+        text = "[A]Start/Stop [W]Left Auto Rotation [E]Left Custom Rotation [R]Right Custom Rotation [T]Right Auto Rotation [Q]Quit"
         text_color = (0, 0, 0)  # 黒色
         text_image = font.render(text, True, text_color)
-        self.screen.blit(text_image, (20, 20))
+        self.screen.blit(text_image, (20, 10))
+
+        # テキストの設定
+        text = f"Auto Rotation: {auto_rotation}x angle: {angle}"
+        text_color = (0, 0, 0)  # 黒色
+        text_image = font.render(text, True, text_color)
+        self.screen.blit(text_image, (20, 30))
 
         if is_alerm:
             # フォントの設定
             font = pygame.font.Font(None, 36)  # デフォルトフォント（サイズ36）
             # テキストの設定
-            text = "Hello, Pygame!"
+            text = "Alerm!"
             text_color = (0, 0, 0)  # 黒色
             text_image = font.render(text, True, text_color)
             self.screen.blit(text_image, (50, 50))

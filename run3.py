@@ -3,6 +3,7 @@ from app.hourglass.hourglass import HourGlass
 from app.draws.draw_pygame import DrawPygame
 import pygame
 import sys
+import math
 
 
 def main():
@@ -12,7 +13,9 @@ def main():
     angle = INIT_ANGLE
     pre_is_finish_falling = True
     is_alerm = False
-    is_auto_rotation = False
+    auto_rotation = 0
+    is_positive_cosine = math.sin((angle * math.pi) / 180) >= 0
+    is_positive_sine = math.cos((angle * math.pi) / 180) >= 0
 
     drawPygame = DrawPygame()
 
@@ -28,19 +31,23 @@ def main():
                     sys.exit()
                 if event.key == pygame.K_a:
                     is_alerm = False
+                elif event.key == pygame.K_w:
+                    auto_rotation -= 1
+                elif event.key == pygame.K_e:
+                    angle -= 90
                 elif event.key == pygame.K_t:
-                    is_auto_rotation = not is_auto_rotation
+                    auto_rotation += 1
                 elif event.key == pygame.K_r:
                     angle += 90
             elif event.type == pygame.VIDEORESIZE:
                 drawPygame.video_resize(event)
 
-        # 角度を増加させる
-        if is_auto_rotation:
-            angle += 1  # 毎フレーム1度回転
+        angle += auto_rotation**2 * (-1 if auto_rotation < 0 else 1)
 
-        if angle < -360:
-            angle = 0
+        if angle > 180:
+            angle -= 360
+        elif angle < -180:
+            angle += 360
 
         # 砂時計の角度を更新
         hourglass.set_angle(angle)
@@ -53,11 +60,21 @@ def main():
             is_alerm = True
             pre_is_finish_falling = True
         elif not is_finish_falling:
-            is_alerm = False
             pre_is_finish_falling = False
 
+        # 角度ジャッジが変化したらアラームを停止する
+        pre_is_positive_sine = math.sin((angle * math.pi) / 180) >= 0
+        pre_is_positive_cosine = math.cos((angle * math.pi) / 180) >= 0
+        if not (
+            pre_is_positive_cosine == is_positive_cosine
+            and pre_is_positive_sine == is_positive_sine
+        ):
+            is_alerm = False
+            is_positive_sine = pre_is_positive_sine
+            is_positive_cosine = pre_is_positive_cosine
+
         # 描写
-        drawPygame.draw(upperDots, lowerDots, angle, is_alerm)
+        drawPygame.draw(upperDots, lowerDots, angle, is_alerm, auto_rotation)
         drawPygame.clock.tick(1 / FRAMERATE)
 
 
