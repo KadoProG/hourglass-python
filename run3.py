@@ -13,7 +13,6 @@ def main():
     # 回転角度
     angle = INIT_ANGLE
     pre_is_finish_falling = True
-    is_alerm = False
     auto_rotation = 0
     is_positive_cosine = math.sin((angle * math.pi) / 180) >= 0
     is_positive_sine = math.cos((angle * math.pi) / 180) >= 0
@@ -33,7 +32,6 @@ def main():
                     pygame.quit()
                     sys.exit()
                 if event.key == pygame.K_a:
-                    is_alerm = False
                     sound.stop()
                 elif event.key == pygame.K_w:
                     auto_rotation -= 1
@@ -46,6 +44,7 @@ def main():
             elif event.type == pygame.VIDEORESIZE:
                 drawPygame.video_resize(event)
 
+        # 角度を更新
         angle += auto_rotation**2 * (-1 if auto_rotation < 0 else 1)
 
         if angle > 180:
@@ -61,7 +60,6 @@ def main():
 
         # 砂時計が落ちきったらアラームを鳴らす
         if not pre_is_finish_falling and is_finish_falling:
-            is_alerm = True
             pre_is_finish_falling = True
             sound.play()
         elif not is_finish_falling:
@@ -74,13 +72,12 @@ def main():
             pre_is_positive_cosine == is_positive_cosine
             and pre_is_positive_sine == is_positive_sine
         ):
-            is_alerm = False
             sound.stop()
             is_positive_sine = pre_is_positive_sine
             is_positive_cosine = pre_is_positive_cosine
 
         # 描写
-        drawPygame.draw(upperDots, lowerDots, angle, is_alerm, auto_rotation)
+        drawPygame.draw(upperDots, lowerDots, angle, sound.is_playing(), auto_rotation)
         drawPygame.clock.tick(1 / FRAMERATE)
 
 
