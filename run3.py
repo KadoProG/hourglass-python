@@ -1,6 +1,7 @@
 from app.config import FRAMERATE, GRID_SIZE, INIT_ANGLE
 from app.hourglass.hourglass import HourGlass
 from app.draws.draw_pygame import DrawPygame
+from app.sound import sound as Sound
 import pygame
 import sys
 import math
@@ -19,6 +20,8 @@ def main():
 
     drawPygame = DrawPygame()
 
+    sound = Sound()
+
     while True:
         # イベント処理
         for event in drawPygame.event().get():
@@ -31,6 +34,7 @@ def main():
                     sys.exit()
                 if event.key == pygame.K_a:
                     is_alerm = False
+                    sound.stop()
                 elif event.key == pygame.K_w:
                     auto_rotation -= 1
                 elif event.key == pygame.K_e:
@@ -59,6 +63,7 @@ def main():
         if not pre_is_finish_falling and is_finish_falling:
             is_alerm = True
             pre_is_finish_falling = True
+            sound.play()
         elif not is_finish_falling:
             pre_is_finish_falling = False
 
@@ -70,6 +75,7 @@ def main():
             and pre_is_positive_sine == is_positive_sine
         ):
             is_alerm = False
+            sound.stop()
             is_positive_sine = pre_is_positive_sine
             is_positive_cosine = pre_is_positive_cosine
 
