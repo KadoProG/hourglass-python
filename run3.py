@@ -1,4 +1,4 @@
-from app.config import FRAMERATE, GRID_SIZE, INIT_ANGLE
+from app.config import FRAMERATE, INIT_ANGLE
 from app.hourglass.hourglass import HourGlass
 from app.draws.draw_pygame import DrawPygame
 from app.sound import sound as Sound
