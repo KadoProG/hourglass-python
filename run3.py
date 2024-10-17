@@ -2,9 +2,9 @@ from app.config import FRAMERATE, INIT_ANGLE
 from app.hourglass.hourglass import HourGlass
 from app.draws.draw_pygame import DrawPygame
 from app.sound import sound as Sound
+from app.events.pygame_keyevents import pygame_keyevents
 from app.utils.angle import Angle
-import pygame
-import sys
+from app.utils.pause import Pause
 import math
 from dotenv import load_dotenv
 import os
@@ -20,7 +20,7 @@ def main():
     # ここで使用される変数の初期化
     angle = Angle(INIT_ANGLE)
     pre_is_finish_falling = True
-    is_paused = False
+    pause = Pause(False)
     is_positive_cosine = math.sin((angle() * math.pi) / 180) >= 0
     is_positive_sine = math.cos((angle() * math.pi) / 180) >= 0
     auto_rotation = 0
@@ -32,33 +32,7 @@ def main():
     upperDots, lowerDots = [], []
 
     while True:
-        # イベント処理
-        for event in drawPygame.event().get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    sys.exit()
-                if event.key == pygame.K_a:
-                    if is_paused:
-                        is_paused = False
-                    elif sound.is_playing():
-                        sound.stop()
-                    else:
-                        is_paused = True
-                    sound.stop()
-                elif event.key == pygame.K_w:
-                    auto_rotation -= 1
-                elif event.key == pygame.K_e:
-                    angle.set(angle() - 90)
-                elif event.key == pygame.K_t:
-                    auto_rotation += 1
-                elif event.key == pygame.K_r:
-                    angle.set(angle() + 90)
-            elif event.type == pygame.VIDEORESIZE:
-                drawPygame.video_resize(event)
+        pygame_keyevents(drawPygame, sound, angle, pause)
 
         # ラズパイのセンサーがある場合はセンサーの値を取得
         if not is_fixed and boot == "raspberrypi" and sensor == "true":
@@ -68,13 +42,13 @@ def main():
             angle.set(-roll + 45)
 
         # 角度を更新
-        angle.set(angle() + auto_rotation**2 * (-1 if auto_rotation < 0 else 1))
+        angle.next_frame()
 
         # 砂時計の角度を更新
         hourglass.set_angle(angle())
 
         # 次のアニメーションを描写
-        if not is_paused:
+        if not pause():
             upperDots, lowerDots, is_finish_falling = hourglass.next_frame()
 
         # 砂時計が落ちきったらアラームを鳴らす
@@ -97,7 +71,7 @@ def main():
 
         # 描写
         drawPygame.draw(
-            upperDots, lowerDots, angle(), sound.is_playing(), auto_rotation, is_paused
+            upperDots, lowerDots, angle(), sound.is_playing(), auto_rotation, pause()
         )
         drawPygame.clock.tick(1 / FRAMERATE)
 
