@@ -28,7 +28,6 @@ def main():
     hourglass = HourGlass()
     drawPygame = DrawPygame()
     sound = Sound()
-    upperDots, lowerDots = [], []
 
     while True:
         # キーイベントを取得
@@ -70,14 +69,7 @@ def main():
             is_positive_cosine = pre_is_positive_cosine
 
         # 描写
-        drawPygame.draw(
-            upperDots,
-            lowerDots,
-            angle(),
-            sound.is_playing(),
-            angle.get_auto_rotation(),
-            pause(),
-        )
+        drawPygame.draw(upperDots, lowerDots, angle, sound.is_playing(), pause())
         drawPygame.clock.tick(1 / FRAMERATE)
 
 

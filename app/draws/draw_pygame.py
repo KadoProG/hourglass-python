@@ -1,4 +1,5 @@
 from app.config import GRID_SIZE
+from app.utils.angle import Angle
 import pygame
 
 
@@ -28,9 +29,8 @@ class DrawPygame:
         self,
         upper_dots,
         lower_dots,
-        angle: int,
+        angle: Angle,
         is_alerm: bool,
-        auto_rotation: int,
         is_paused: bool = False,
     ):
         # オブジェクトを描画
@@ -64,7 +64,7 @@ class DrawPygame:
             )
 
         # キャンバスの回転
-        rotated_canvas = pygame.transform.rotate(self.canvas, -angle)
+        rotated_canvas = pygame.transform.rotate(self.canvas, -angle())
         rect = rotated_canvas.get_rect(
             center=(self.x / 2, self.y / 2)
         )  # メイン画面中央に配置
@@ -82,7 +82,7 @@ class DrawPygame:
         self.screen.blit(text_image, (20, 10))
 
         # テキストの設定
-        text = f"Auto Rotation: {auto_rotation}x angle: {angle}"
+        text = f"Auto Rotation: {angle.get_auto_rotation()}x angle: {angle()}"
         text_color = (0, 0, 0)  # 黒色
         text_image = font.render(text, True, text_color)
         self.screen.blit(text_image, (20, 30))
