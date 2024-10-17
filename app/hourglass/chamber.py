@@ -1,31 +1,31 @@
 import math
 from app.hourglass.dot import Dot
-from app.config import GRID_SIZE
 from app.utils.find_index import find_index
 
 
 class Chamber:
     """砂の挙動を制御するクラス"""
 
-    def __init__(self) -> None:
+    def __init__(self, grid_size: int) -> None:
         self.dots: list[Dot] = []
         self._is_positive_sine = True
         self._is_positive_cosine = True
+        self._grid_size = grid_size
 
     def add_dot(self, angle: int) -> None:
         """ドットを追加する"""
         self._is_positive_sine = math.sin((angle * math.pi) / 180) >= 0
         self._is_positive_cosine = math.cos((angle * math.pi) / 180) >= 0
 
-        x = 0 if self._is_positive_sine else GRID_SIZE - 1
-        y = 0 if self._is_positive_cosine else GRID_SIZE - 1
+        x = 0 if self._is_positive_sine else self._grid_size - 1
+        y = 0 if self._is_positive_cosine else self._grid_size - 1
 
         self.dots.append(Dot(x, y))
 
     def remove_dot(self) -> bool:
         """ドットを削除する"""
-        x = GRID_SIZE - 1 if self._is_positive_sine else 0
-        y = GRID_SIZE - 1 if self._is_positive_cosine else 0
+        x = self._grid_size - 1 if self._is_positive_sine else 0
+        y = self._grid_size - 1 if self._is_positive_cosine else 0
 
         index = find_index(self.dots, lambda dot: dot.x == x and dot.y == y)
 
@@ -58,7 +58,7 @@ class Chamber:
             is_bottom_left_empty = True
 
             # x軸に対して、はみ出し確認と位置調整
-            if self._is_positive_sine and x == GRID_SIZE:
+            if self._is_positive_sine and x == self._grid_size:
                 x -= 1
                 is_right_end = True
             elif not self._is_positive_sine and x == -1:
@@ -66,7 +66,7 @@ class Chamber:
                 is_right_end = True
 
             # y軸に対して、はみ出し確認と位置調整
-            if self._is_positive_cosine and y == GRID_SIZE:
+            if self._is_positive_cosine and y == self._grid_size:
                 y -= 1
                 is_bottom_end = True
             elif (not self._is_positive_cosine) and y == -1:

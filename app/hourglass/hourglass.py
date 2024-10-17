@@ -4,16 +4,15 @@ from app.config import (
     INIT_ANGLE,
     INTERVAL_FALLING,
     BALL_LENGTH,
-    GRID_SIZE,
     INTERVAL_THROUTH_CANVAS,
 )
 from app.hourglass.chamber import Chamber
 
 
 class HourGlass:
-    def __init__(self):
-        self.upper_chamber = Chamber()
-        self.lower_chamber = Chamber()
+    def __init__(self, grid_size: int) -> None:
+        self.upper_chamber = Chamber(grid_size)
+        self.lower_chamber = Chamber(grid_size)
         self._angle = INIT_ANGLE
         self._frame_count = 0
         """フレームを数える"""
@@ -23,7 +22,7 @@ class HourGlass:
 
         self._interval_frequency = INTERVAL_FALLING / FRAMERATE
         self._interval_canvas_frequency = INTERVAL_THROUTH_CANVAS / FRAMERATE
-        self._canvas_frequency_temp = self._interval_frequency * BALL_LENGTH + GRID_SIZE
+        self._canvas_frequency_temp = self._interval_frequency * BALL_LENGTH + grid_size
 
     def next_frame(self):
         self.upper_chamber.next_frame(self._angle)
@@ -90,7 +89,11 @@ class HourGlass:
     def get_is_finish_falling(self) -> bool:
         return self._is_finish_falling
 
-    def reset(self) -> None:
+    def reset(self, ball_length: int = None) -> None:
         length = self.lower_chamber.remove_all()
+        if ball_length is not None:
+            self.upper_chamber.remove_all()
+            length = ball_length
+
         for _ in range(length):
             self.upper_chamber.add_dot(self._angle)

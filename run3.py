@@ -1,4 +1,4 @@
-from app.config import FRAMERATE, INIT_ANGLE
+from app.config import FRAMERATE, INIT_ANGLE, GRID_SIZE
 from app.hourglass.hourglass import HourGlass
 from app.draws.draw_pygame import DrawPygame
 from app.sound import sound as Sound
@@ -26,8 +26,8 @@ def main():
     is_positive_sine = math.cos((angle() * math.pi) / 180) >= 0
 
     # インスタンスの生成
-    hourglass = HourGlass()
-    drawPygame = DrawPygame()
+    hourglass = HourGlass(GRID_SIZE)
+    drawPygame = DrawPygame(GRID_SIZE)
     sound = Sound()
 
     while True:

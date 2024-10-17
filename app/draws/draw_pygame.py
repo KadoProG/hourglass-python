@@ -1,4 +1,3 @@
-from app.config import GRID_SIZE
 from app.utils.angle import Angle
 import pygame
 
@@ -10,19 +9,20 @@ GREEN = (200, 255, 200)
 
 
 class DrawPygame:
-    def __init__(self):
+    def __init__(self, grid_size: int):
         pygame.init()
         info = pygame.display.Info()  # ディスプレイ情報を取得
         self.x, self.y = info.current_w / 2, info.current_h
         self.screen = pygame.display.set_mode((self.x, self.y), pygame.RESIZABLE)
         pygame.display.set_caption("砂時計 App")
         self.clock = pygame.time.Clock()
+        self._grid_size = grid_size
 
         screen_radius = min(self.x, self.y) // 2
-        self.radius = screen_radius / GRID_SIZE // 2
+        self.radius = screen_radius / grid_size // 2
         # 仮想キャンバスの作成
-        canvas_size = (self.radius * GRID_SIZE * 2, self.radius * GRID_SIZE * 2)
-        self.chamba_size = GRID_SIZE * self.radius
+        canvas_size = (self.radius * grid_size * 2, self.radius * grid_size * 2)
+        self.chamba_size = grid_size * self.radius
         self.canvas = pygame.Surface(canvas_size, pygame.SRCALPHA)
 
     def draw(
@@ -112,10 +112,13 @@ class DrawPygame:
         self.x, self.y = event.w, event.h
         self.screen = pygame.display.set_mode((self.x, self.y), pygame.RESIZABLE)
         screen_radius = min(self.x, self.y) // 2
-        self.radius = screen_radius / GRID_SIZE // 2
+        self.radius = screen_radius / self._grid_size // 2
         # 仮想キャンバスの作成
-        canvas_size = (self.radius * GRID_SIZE * 2, self.radius * GRID_SIZE * 2)
-        self.chamba_size = GRID_SIZE * self.radius
+        canvas_size = (
+            self.radius * self._grid_size * 2,
+            self.radius * self._grid_size * 2,
+        )
+        self.chamba_size = self._grid_size * self.radius
         self.canvas = pygame.Surface(canvas_size, pygame.SRCALPHA)
 
     def event(self):
