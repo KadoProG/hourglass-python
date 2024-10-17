@@ -1,6 +1,7 @@
 from app.config import FRAMERATE, INIT_ANGLE, GRID_SIZE
 from app.hourglass.hourglass import HourGlass
 from app.draws.draw_pygame import DrawPygame
+from app.draws.draw_ledmatrix import DrawLedmatrix
 from app.sound import sound as Sound
 from app.events.pygame_keyevents import pygame_keyevents
 from app.utils.angle import Angle
@@ -28,6 +29,7 @@ def main():
     # インスタンスの生成
     hourglass = HourGlass(GRID_SIZE)
     drawPygame = DrawPygame(GRID_SIZE)
+    drawLedmatrix = DrawLedmatrix(GRID_SIZE, FRAMERATE)
     sound = Sound()
 
     while True:
@@ -71,6 +73,7 @@ def main():
 
         # 描写
         drawPygame.draw(upperDots, lowerDots, angle, sound.is_playing(), pause())
+        drawLedmatrix.draw(upperDots, lowerDots, sound.is_playing())
         drawPygame.clock.tick(1 / FRAMERATE)
 
 
