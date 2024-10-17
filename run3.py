@@ -23,7 +23,6 @@ def main():
     pause = Pause(False)
     is_positive_cosine = math.sin((angle() * math.pi) / 180) >= 0
     is_positive_sine = math.cos((angle() * math.pi) / 180) >= 0
-    auto_rotation = 0
 
     # インスタンスの生成
     hourglass = HourGlass()
@@ -32,6 +31,7 @@ def main():
     upperDots, lowerDots = [], []
 
     while True:
+        # キーイベントを取得
         pygame_keyevents(drawPygame, sound, angle, pause)
 
         # ラズパイのセンサーがある場合はセンサーの値を取得
@@ -71,7 +71,12 @@ def main():
 
         # 描写
         drawPygame.draw(
-            upperDots, lowerDots, angle(), sound.is_playing(), auto_rotation, pause()
+            upperDots,
+            lowerDots,
+            angle(),
+            sound.is_playing(),
+            angle.get_auto_rotation(),
+            pause(),
         )
         drawPygame.clock.tick(1 / FRAMERATE)
 

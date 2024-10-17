@@ -13,6 +13,9 @@ class Angle:
             angle += 360
         self.__angle = angle
 
+    def get_auto_rotation(self) -> int:
+        return self.__auto_rotation
+
     def set_auto_rotation(self, auto_rotation: int):
         self.__auto_rotation += auto_rotation
 
