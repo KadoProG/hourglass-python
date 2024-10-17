@@ -32,7 +32,7 @@ def main():
 
     while True:
         # キーイベントを取得
-        pygame_keyevents(drawPygame, sound, angle, pause)
+        pygame_keyevents(drawPygame, sound, angle, pause, hourglass, is_fixed)
 
         # ラズパイのセンサーがある場合はセンサーの値を取得
         if not is_fixed and boot == "raspberrypi" and sensor == "true":

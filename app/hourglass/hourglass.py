@@ -86,3 +86,11 @@ class HourGlass:
 
         if self._angle > 180:
             self._angle -= 360
+
+    def get_is_finish_falling(self) -> bool:
+        return self._is_finish_falling
+
+    def reset(self) -> None:
+        length = self.lower_chamber.remove_all()
+        for _ in range(length):
+            self.upper_chamber.add_dot(self._angle)

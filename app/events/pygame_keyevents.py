@@ -1,11 +1,19 @@
 from app.draws.draw_pygame import DrawPygame
+from app.hourglass.hourglass import HourGlass
 from app.utils.angle import Angle
 from app.utils.pause import Pause
 import pygame
 import sys
 
 
-def pygame_keyevents(drawPygame: DrawPygame, sound, angle: Angle, pause: Pause):
+def pygame_keyevents(
+    drawPygame: DrawPygame,
+    sound,
+    angle: Angle,
+    pause: Pause,
+    hourglass: HourGlass,
+    is_fixed: bool,
+):
     # イベント処理
     for event in drawPygame.event().get():
         if event.type == pygame.QUIT:
@@ -18,11 +26,14 @@ def pygame_keyevents(drawPygame: DrawPygame, sound, angle: Angle, pause: Pause):
             if event.key == pygame.K_a:
                 if pause():
                     pause.set(False)
+                    if hourglass.get_is_finish_falling() and is_fixed:
+                        hourglass.reset()
                 elif sound.is_playing():
                     sound.stop()
+                    if is_fixed:
+                        pause.set(True)
                 else:
                     pause.set(True)
-                sound.stop()
             elif event.key == pygame.K_w:
                 angle.set_auto_rotation(-1)
             elif event.key == pygame.K_e:

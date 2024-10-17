@@ -35,6 +35,12 @@ class Chamber:
             del self.dots[index]
             return True
 
+    def remove_all(self) -> int:
+        """全てのドットを削除する"""
+        length = len(self.dots)
+        self.dots = []
+        return length
+
     def next_frame(self, angle: int) -> None:
         """フレームごとの処理"""
         self._is_positive_sine = math.sin((angle * math.pi) / 180) >= 0
