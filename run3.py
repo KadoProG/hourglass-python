@@ -9,6 +9,7 @@ from app.utils.angle import Angle
 from app.utils.pause import Pause
 from app.utils.get_option import get_option
 import math
+import requests
 from dotenv import load_dotenv
 import os
 
@@ -16,6 +17,7 @@ load_dotenv()
 
 boot = os.getenv("BOOT")
 sensor = os.getenv("SENSOR")
+API_URL = os.getenv("API_URL")
 
 
 def main():
@@ -75,6 +77,8 @@ def main():
         if not pre_is_finish_falling and is_finish_falling:
             pre_is_finish_falling = True
             sound.play()
+            if API_URL:
+                requests.get(API_URL)
         elif not is_finish_falling:
             pre_is_finish_falling = False
 
