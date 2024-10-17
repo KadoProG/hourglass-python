@@ -5,6 +5,7 @@ from app.sound import sound as Sound
 from app.events.pygame_keyevents import pygame_keyevents
 from app.utils.angle import Angle
 from app.utils.pause import Pause
+from app.utils.get_option import get_option
 import math
 from dotenv import load_dotenv
 import os
@@ -16,9 +17,9 @@ sensor = os.getenv("SENSOR")
 
 
 def main():
-    is_fixed = False
+    is_fixed = get_option()
     # ここで使用される変数の初期化
-    angle = Angle(INIT_ANGLE)
+    angle = Angle(INIT_ANGLE, is_fixed)
     pre_is_finish_falling = True
     pause = Pause(False)
     is_positive_cosine = math.sin((angle() * math.pi) / 180) >= 0
