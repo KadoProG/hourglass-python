@@ -20,21 +20,23 @@ sensor = os.getenv("SENSOR")
 
 def main():
     is_fixed = get_option()
-    # ここで使用される変数の初期化
-    angle = Angle(INIT_ANGLE, is_fixed)
-    pre_is_finish_falling = True
-    pause = Pause(False)
-    is_positive_cosine = math.sin((angle() * math.pi) / 180) >= 0
-    is_positive_sine = math.cos((angle() * math.pi) / 180) >= 0
 
     # インスタンスの生成
     hourglass = HourGlass(GRID_SIZE)
     drawPygame = DrawPygame(GRID_SIZE)
+    pause = Pause(False)
+    angle = Angle(INIT_ANGLE, is_fixed)
     drawLedmatrix = DrawLedmatrix(GRID_SIZE, FRAMERATE)
     sound = Sound()
     gpioButton = GpioButton()
 
+    # 変数の初期化
+    pre_is_finish_falling = True
+    is_positive_cosine = math.sin((angle() * math.pi) / 180) >= 0
+    is_positive_sine = math.cos((angle() * math.pi) / 180) >= 0
+
     def start_stop():
+        """スタート/ストップボタンを押したときの処理"""
         if pause():
             pause.set(False)
             if hourglass.get_is_finish_falling() and is_fixed:
