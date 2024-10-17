@@ -4,6 +4,7 @@ from app.draws.draw_pygame import DrawPygame
 from app.draws.draw_ledmatrix import DrawLedmatrix
 from app.sound import sound as Sound
 from app.events.pygame_keyevents import pygame_keyevents
+from app.events.gpio_button import GpioButton
 from app.utils.angle import Angle
 from app.utils.pause import Pause
 from app.utils.get_option import get_option
@@ -31,10 +32,23 @@ def main():
     drawPygame = DrawPygame(GRID_SIZE)
     drawLedmatrix = DrawLedmatrix(GRID_SIZE, FRAMERATE)
     sound = Sound()
+    gpioButton = GpioButton()
+
+    def start_stop():
+        if pause():
+            pause.set(False)
+            if hourglass.get_is_finish_falling() and is_fixed:
+                hourglass.reset()
+        elif sound.is_playing():
+            sound.stop()
+            if is_fixed:
+                pause.set(True)
+        else:
+            pause.set(True)
 
     while True:
         # キーイベントを取得
-        pygame_keyevents(drawPygame, sound, angle, pause, hourglass, is_fixed)
+        pygame_keyevents(drawPygame, angle, start_stop)
 
         # ラズパイのセンサーがある場合はセンサーの値を取得
         if not is_fixed and boot == "raspberrypi" and sensor == "true":
@@ -42,6 +56,8 @@ def main():
 
             roll, _ = get_mpu_angle()
             angle.set(-roll + 45)
+
+        gpioButton.button_event(start_stop)
 
         # 角度を更新
         angle.next_frame()
