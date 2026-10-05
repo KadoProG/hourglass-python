@@ -1,7 +1,6 @@
 from app.utils.angle import Angle
 import pygame
 
-
 # 色の定義
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
