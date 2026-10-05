@@ -12,7 +12,6 @@ import curses
 import socketio
 import threading
 
-
 # 環境変数の読み込み
 load_dotenv()
 boot = os.getenv("BOOT")

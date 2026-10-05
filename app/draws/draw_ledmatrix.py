@@ -3,7 +3,6 @@ from app.utils.angle import Angle
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 boot = os.getenv("BOOT")
 
