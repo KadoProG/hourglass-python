@@ -35,5 +35,5 @@ smbus==1.1.post2
 smbus2==0.4.3
 spidev==3.6
 urllib3==2.8.0
-Werkzeug==3.1.6
+Werkzeug==3.1.9
 wsproto==1.2.0
