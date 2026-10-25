@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check formatting (black)
+        run: black --check .
+
+      - name: Compile all Python files
+        run: python -m compileall -q -x '(^|/)(venv|node_modules)/' .
+
+      # BOOT を空にするとサウンドはモックになり、ハードウェア依存のモジュールを読まずに済む
+      - name: Import entry point
+        env:
+          BOOT: ""
+        run: python -c "import run"
